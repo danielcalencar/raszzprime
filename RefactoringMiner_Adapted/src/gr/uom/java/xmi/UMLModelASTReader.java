@@ -43,13 +43,12 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.refactoringminer.util.AstUtils;
 
 import gr.uom.java.xmi.decomposition.OperationBody;
+import org.apache.log4j.Logger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class UMLModelASTReader {
 	public static final String systemFileSeparator = Matcher.quoteReplacement(File.separator);
-	Logger log = LoggerFactory.getLogger(UMLModelASTReader.class);
+	private static final Logger log = Logger.getLogger(UMLModelASTReader.class);
 	
 	private UMLModel umlModel;
 	private String projectRoot;
@@ -152,7 +151,7 @@ public class UMLModelASTReader {
 	private void processTypeDeclaration(String fileContents, TypeDeclaration typeDeclaration, String packageName, String sourceFile,
 			List<String> importedTypes, CompilationUnit compilationUnit, int recursionLevel) {
 		recursionLevel++;
-		log.info("the recursion level is: {}", recursionLevel);
+		log.info("the recursion level is: " + recursionLevel);
 		Javadoc javaDoc = typeDeclaration.getJavadoc();
 		if(javaDoc != null) {
 			List<TagElement> tags = javaDoc.tags();

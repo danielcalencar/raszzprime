@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.2.3" icons="true" automaticImage="PNG" generate-combined-fragments="true">  
+  <object id="1" language="java" name="br.ufrn.raszz.miner.szz.RaSZZ" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/miner/szz/RaSZZ.java" binary="false" label="raSZZ" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="2">      
+      <position height="1206" width="0" x="0" y="80"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="1152" width="0" x="0" y="116"/>    
+    </execution>    
+    <execution id="6">      
+      <position height="1092" width="104" x="5" y="158"/>    
+    </execution>    
+    <execution id="9">      
+      <position height="286" width="104" x="5" y="217"/>    
+    </execution>    
+    <execution id="20">      
+      <position height="693" width="7" x="60" y="521"/>    
+    </execution>    
+    <execution id="22">      
+      <position height="18" width="0" x="0" y="569"/>    
+    </execution>    
+    <execution id="24">      
+      <position height="577" width="0" x="0" y="619"/>    
+    </execution>    
+    <execution id="30">      
+      <position height="18" width="7" x="66" y="883"/>    
+    </execution>    
+    <execution id="11">      
+      <position height="18" width="7" x="63" y="253"/>    
+    </execution>  
+  </object>  
+  <object id="35" language="java" name="br.ufrn.raszz.miner.Miner" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/miner/Miner.java" binary="false" label="miner" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="515" y="0"/>    
+    <execution id="8">      
+      <position height="1056" width="86" x="113" y="176"/>    
+    </execution>  
+  </object>  
+  <object id="38" language="java" name="br.ufrn.raszz.persistence.FactoryDAO" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/persistence/FactoryDAO.java" binary="false" label="factoryDAO" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="17">      
+      <position height="18" width="111" x="203" y="442"/>    
+    </execution>    
+    <execution id="19">      
+      <position height="18" width="111" x="203" y="467"/>    
+    </execution>  
+  </object>  
+  <object id="39" language="java" name="org.refactoringminer.util.GitServiceImpl" project="RefactoringMiner_Adapted" 
+    file="/RefactoringMiner_Adapted/src/org/refactoringminer/util/GitServiceImpl.java" binary="false" 
+    label="gitServiceImpl" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="870" y="0"/>    
+    <execution id="13">      
+      <position height="18" width="128" x="318" y="316"/>    
+    </execution>  
+  </object>  
+  <object id="40" language="java" name="org.refactoringminer.util.SvnServiceImpl" project="RefactoringMiner_Adapted" 
+    file="/RefactoringMiner_Adapted/src/org/refactoringminer/util/SvnServiceImpl.java" binary="false" 
+    label="svnServiceImpl" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="870" y="0"/>    
+    <execution id="15">      
+      <position height="18" width="134" x="450" y="387"/>    
+    </execution>  
+  </object>  
+  <object id="41" language="java" name="br.ufrn.raszz.persistence.SzzDAO" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/persistence/SzzDAO.java" binary="false" label="szzDAO" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="769" y="0"/>    
+    <execution id="26">      
+      <position height="18" width="111" x="462" y="724"/>    
+    </execution>    
+    <execution id="28">      
+      <position height="18" width="111" x="462" y="795"/>    
+    </execution>  
+  </object>  
+  <object id="42" language="java" name="br.ufrn.raszz.miner.szz.AnnotationGraphServiceRaSZZ" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/miner/szz/AnnotationGraphServiceRaSZZ.java" binary="false" 
+    label="annotationGraphServiceRaSZZ" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="757" y="0"/>    
+    <execution id="32">      
+      <position height="107" width="202" x="577" y="946"/>    
+    </execution>    
+    <execution id="44">      
+      <position height="18" width="7" x="801" y="1017"/>    
+    </execution>  
+  </object>  
+  <object id="45" language="java" name="br.ufrn.raszz.miner.szz.AnnotationGraphServiceMaSZZ" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/miner/szz/AnnotationGraphServiceMaSZZ.java" binary="false" 
+    label="annotationGraphServiceMaSZZ" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="881" y="0"/>    
+    <execution id="34">      
+      <position height="72" width="203" x="783" y="1106"/>    
+    </execution>    
+    <execution id="47">      
+      <position height="18" width="203" x="909" y="1142"/>    
+    </execution>  
+  </object>  
+  <combined-fragment id="48" interaction-operator="LOOP">    
+    <interaction-operand id="49" constraint="for:j &lt; projects.length">      
+      <fragment refId="50"/>    
+    </interaction-operand>    
+    <combined-fragment id="50" interaction-operator="CRITICAL">      
+      <interaction-operand id="51" constraint="szzDAO">        
+        <fragment refId="52"/>      
+      </interaction-operand>      
+      <combined-fragment id="52" interaction-operator="ALT">        
+        <interaction-operand id="53" constraint="case GIT:">          
+          <fragment refId="25"/>        
+        </interaction-operand>        
+        <interaction-operand id="54" constraint="case SVN:">          
+          <fragment refId="27"/>        
+        </interaction-operand>      
+      </combined-fragment>    
+    </combined-fragment>  
+  </combined-fragment>  
+  <note id="55">    
+    <position height="27" width="94" x="319" y="543"/>    
+    <text><![CDATA[repoType]]>
+    </text>  
+  </note>  
+  <note id="56">    
+    <position height="23" width="87" x="345" y="866"/>    
+    <text><![CDATA[szzType]]>
+    </text>  
+  </note>  
+  <note id="57">    
+    <position height="26" width="77" x="269" y="227"/>    
+    <text><![CDATA[repoType]]>
+    </text>  
+  </note>  
+  <combined-fragment id="58" interaction-operator="ALT">    
+    <interaction-operand id="59" constraint="case GIT:">      
+      <fragment refId="12"/>    
+    </interaction-operand>    
+    <interaction-operand id="60" constraint="case SVN:">      
+      <fragment refId="14"/>    
+    </interaction-operand>  
+  </combined-fragment>  
+  <combined-fragment id="61" interaction-operator="ALT">    
+    <interaction-operand id="62" constraint="case RASZZ:">      
+      <fragment refId="43"/>      
+      <fragment refId="31"/>    
+    </interaction-operand>    
+    <interaction-operand id="63" constraint="case MASZZ:">      
+      <fragment refId="33"/>      
+      <fragment refId="46"/>    
+    </interaction-operand>  
+  </combined-fragment>  
+  <message id="3" operation="main(java.lang.String[]):void" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" 
+    operation="init(java.lang.String[],br.ufrn.raszz.model.RepositoryType,br.ufrn.raszz.model.SZZImplementationType,boolean,java.lang.String[]):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" operation="executeMining():void" asynchronous="false">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="10" operation="getProperty(java.lang.String,java.lang.String):java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="11"/>  
+  </message>  
+  <message id="12" operation="GitServiceImpl()" asynchronous="false">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="13"/>  
+  </message>  
+  <message id="14" operation="SvnServiceImpl()" asynchronous="false">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="15"/>  
+  </message>  
+  <message id="16" operation="getFactoryDAO(br.ufrn.raszz.persistence.DAOType):br.ufrn.raszz.persistence.FactoryDAO" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="17"/>  
+  </message>  
+  <message id="18" operation="getSzzDAO():br.ufrn.raszz.persistence.SzzDAO" asynchronous="false">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="19"/>  
+  </message>  
+  <message id="21" operation="getProperty(java.lang.String,java.lang.String):java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="22"/>  
+  </message>  
+  <message id="23" operation="buildAnnotationGraph():void" asynchronous="false">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="24"/>  
+  </message>  
+  <message id="25" operation="getGitLinkedRevision(java.lang.String):java.util.List&lt;String&gt;" asynchronous="false">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="26"/>  
+  </message>  
+  <message id="27" operation="getGitLinkedRevision(java.lang.String):java.util.List&lt;String&gt;" asynchronous="false">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="28"/>  
+  </message>  
+  <message id="29" operation="getProperty(java.lang.String,java.lang.String):java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="30"/>  
+  </message>  
+  <message id="31" 
+    operation="AnnotationGraphServiceRaSZZ(br.ufrn.razszz.connectoradapter.SzzRepository,br.ufrn.raszz.persistence.SzzDAO,java.lang.String,java.util.List&lt;java.lang.String&gt;,java.lang.String,java.lang.String,java.lang.String,br.ufrn.raszz.model.SZZImplementationType)" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="32"/>  
+  </message>  
+  <message id="33" 
+    operation="AnnotationGraphServiceMaSZZ(br.ufrn.razszz.connectoradapter.SzzRepository,br.ufrn.raszz.persistence.SzzDAO,java.lang.String,java.util.List&lt;java.lang.String&gt;,java.lang.String,java.lang.String,java.lang.String,br.ufrn.raszz.model.SZZImplementationType)" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="34"/>  
+  </message>  
+  <message id="36" operation="performSetup():void" asynchronous="false" x="79" y="198">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </message>  
+  <message id="37" operation="performMining():void" asynchronous="false" x="79" y="504">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="20"/>  
+  </message>  
+  <message id="43" operation="run():void" asynchronous="false">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="44"/>  
+  </message>  
+  <message id="46" operation="run():void" asynchronous="false">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="47"/>  
+  </message>  
+  <text-link id="64">    
+    <link-end type="SOURCE" refId="56"/>    
+    <link-end type="TARGET" refId="29"/>  
+  </text-link>  
+  <text-link id="65">    
+    <link-end type="SOURCE" refId="57"/>    
+    <link-end type="TARGET" refId="10"/>  
+  </text-link>  
+  <text-link id="66">    
+    <link-end type="SOURCE" refId="55"/>    
+    <link-end type="TARGET" refId="21"/>  
+  </text-link>
+</sequence-diagram>

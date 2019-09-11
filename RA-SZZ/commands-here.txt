@@ -1,0 +1,3 @@
+# crazy long command to run the program
+java -cp c:\Lecturer_2019\Bailey\raszzproject\core-connector\build\classes;c:\Lecturer_2019\Bailey\raszzproject\core-connector\libs\*;c:\Lecturer_2019\Bailey\raszzproject\DiffJ\build\classes;c:\Lecturer_2019\Bailey\raszzproject\DiffJ\libs\*;c:\Lecturer_2019\Bailey\raszzproject\RefactoringMiner_Adapted\build\classes;c:\Lecturer_2019\Bailey\raszzproject\RefactoringMiner_Adapted\libs\*;c:\Lecturer_2019\Bailey\raszzproject\refdiff-core\build\classes;c:\Lecturer_2019\Bailey\raszzproject\refdiff-core\libs\*;c:\Lecturer_2019\Bailey\raszzproject\RA-SZZ\libs\*;c:\Lecturer_2019\Bailey\raszzproject\RA-SZZ\build\classes br.ufrn.raszz.miner.szz.RaSZZ
+

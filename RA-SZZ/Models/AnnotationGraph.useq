@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.2.3" icons="true" automaticImage="PNG" generate-combined-fragments="true">  
+  <object id="1" language="java" name="br.ufrn.raszz.miner.Miner" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/miner/Miner.java" binary="false" label="miner" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="404" y="0"/>    
+    <execution id="2">      
+      <position height="2403" width="86" x="5" y="70"/>    
+    </execution>  
+  </object>  
+  <object id="5" language="java" name="br.ufrn.raszz.miner.szz.AnnotationGraphServiceRaSZZ" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/miner/szz/AnnotationGraphServiceRaSZZ.java" binary="false" 
+    label="annotationGraphService" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="625" y="0"/>    
+    <execution id="4">      
+      <position height="2367" width="164" x="95" y="88"/>    
+    </execution>    
+    <execution id="7">      
+      <position height="2313" width="0" x="0" y="124"/>    
+    </execution>    
+    <execution id="29">      
+      <position height="1334" width="0" x="0" y="840"/>    
+    </execution>    
+    <execution id="47">      
+      <position height="18" width="0" x="0" y="1029"/>    
+    </execution>    
+    <execution id="49">      
+      <position height="18" width="0" x="0" y="1074"/>    
+    </execution>    
+    <execution id="59">      
+      <position height="18" width="0" x="0" y="1263"/>    
+    </execution>    
+    <execution id="87">      
+      <position height="18" width="0" x="0" y="2043"/>    
+    </execution>  
+  </object>  
+  <object id="90" language="java" name="java.util.LinkedList" project="RA-SZZ" 
+    file="/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar" binary="true" label="fileRevisions" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="39">      
+      <position height="18" width="0" x="0" y="867"/>    
+    </execution>    
+    <execution id="41">      
+      <position height="18" width="0" x="0" y="903"/>    
+    </execution>    
+    <execution id="43">      
+      <position height="18" width="0" x="0" y="939"/>    
+    </execution>  
+  </object>  
+  <object id="91" language="java" name="br.ufrn.razszz.connectoradapter.SzzRepository" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/razszz/connectoradapter/SzzRepository.java" binary="false" label="szzRepository" 
+    type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="45">      
+      <position height="18" width="0" x="0" y="975"/>    
+    </execution>  
+  </object>  
+  <object id="92" language="java" name="br.ufrn.raszz.model.szz.SzzFileRevision" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/model/szz/SzzFileRevision.java" binary="false" label="beforeRev" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="51">      
+      <position height="18" width="0" x="0" y="1101"/>    
+    </execution>    
+    <execution id="55">      
+      <position height="18" width="0" x="0" y="1173"/>    
+    </execution>    
+    <execution id="71">      
+      <position height="18" width="0" x="0" y="1666"/>    
+    </execution>    
+    <execution id="83">      
+      <position height="18" width="0" x="0" y="1918"/>    
+    </execution>  
+  </object>  
+  <object id="93" language="java" name="br.ufrn.raszz.model.szz.SzzFileRevision" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/model/szz/SzzFileRevision.java" binary="false" label="fixRev" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="53">      
+      <position height="18" width="0" x="0" y="1137"/>    
+    </execution>    
+    <execution id="57">      
+      <position height="18" width="0" x="0" y="1209"/>    
+    </execution>    
+    <execution id="73">      
+      <position height="18" width="0" x="0" y="1702"/>    
+    </execution>    
+    <execution id="85">      
+      <position height="18" width="0" x="0" y="1954"/>    
+    </execution>  
+  </object>  
+  <object id="94" language="java" name="br.ufrn.raszz.model.szz.Line" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/model/szz/Line.java" binary="false" label="linetotrace" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="61">      
+      <position height="18" width="0" x="0" y="1430"/>    
+    </execution>    
+    <execution id="75">      
+      <position height="18" width="0" x="0" y="1738"/>    
+    </execution>    
+    <execution id="77">      
+      <position height="18" width="0" x="0" y="1774"/>    
+    </execution>    
+    <execution id="79">      
+      <position height="18" width="0" x="0" y="1810"/>    
+    </execution>    
+    <execution id="81">      
+      <position height="18" width="0" x="0" y="1882"/>    
+    </execution>  
+  </object>  
+  <object id="95" language="java" name="br.ufrn.raszz.util.RefacOperationsUtil" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/util/RefacOperationsUtil.java" binary="false" label="&lt;static&gt;" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="63">      
+      <position height="18" width="0" x="0" y="1466"/>    
+    </execution>  
+  </object>  
+  <object id="96" language="java" name="java.util.List" project="RA-SZZ" 
+    file="/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar" binary="true" label="list" type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="65">      
+      <position height="18" width="0" x="0" y="1538"/>    
+    </execution>  
+  </object>  
+  <object id="97" language="java" name="java.util.Map" project="RA-SZZ" file="/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar" 
+    binary="true" label="map" type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="67">      
+      <position height="18" width="0" x="0" y="1584"/>    
+    </execution>  
+  </object>  
+  <object id="98" language="java" name="br.ufrn.raszz.persistence.SzzDAO" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/persistence/SzzDAO.java" binary="false" label="szzDAO1" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="69">      
+      <position height="18" width="0" x="0" y="1630"/>    
+    </execution>  
+  </object>  
+  <object id="99" language="java" name="java.io.ByteArrayOutputStream" project="RA-SZZ" 
+    file="/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar" binary="true" label="diff" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="89">      
+      <position height="18" width="0" x="0" y="2138"/>    
+    </execution>  
+  </object>  
+  <object id="100" language="java" name="br.ufrn.raszz.persistence.SzzDAO" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/persistence/SzzDAO.java" binary="false" label="szzDAO" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="9">      
+      <position height="18" width="0" x="0" y="151"/>    
+    </execution>    
+    <execution id="11">      
+      <position height="18" width="0" x="0" y="223"/>    
+    </execution>    
+    <execution id="15">      
+      <position height="18" width="0" x="0" y="376"/>    
+    </execution>    
+    <execution id="31">      
+      <position height="18" width="0" x="0" y="2247"/>    
+    </execution>    
+    <execution id="33">      
+      <position height="18" width="0" x="0" y="2319"/>    
+    </execution>    
+    <execution id="35">      
+      <position height="18" width="0" x="0" y="2365"/>    
+    </execution>  
+  </object>  
+  <object id="101" language="java" name="java.util.ArrayList" project="RA-SZZ" 
+    file="/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar" binary="true" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="13">      
+      <position height="18" width="0" x="0" y="294"/>    
+    </execution>  
+  </object>  
+  <object id="102" language="java" name="java.util.HashMap" project="RA-SZZ" 
+    file="/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar" binary="true" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="17">      
+      <position height="18" width="0" x="0" y="447"/>    
+    </execution>  
+  </object>  
+  <object id="103" language="java" name="br.ufrn.raszz.model.szz.AnnotationGraphModel" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/model/szz/AnnotationGraphModel.java" binary="false" label="model" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="19">      
+      <position height="18" width="0" x="0" y="563"/>    
+    </execution>  
+  </object>  
+  <object id="104" language="java" name="br.ufrn.razszz.connectoradapter.SzzRepository" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/razszz/connectoradapter/SzzRepository.java" binary="false" label="repository" 
+    type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="21">      
+      <position height="18" width="0" x="0" y="609"/>    
+    </execution>    
+    <execution id="23">      
+      <position height="18" width="0" x="0" y="698"/>    
+    </execution>  
+  </object>  
+  <object id="105" language="java" name="br.ufrn.raszz.miner.szz.AnnotationGraphBuilder" project="RA-SZZ" 
+    file="/RA-SZZ/src/br/ufrn/raszz/miner/szz/AnnotationGraphBuilder.java" binary="false" label="agb" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="25">      
+      <position height="18" width="0" x="0" y="744"/>    
+    </execution>    
+    <execution id="27">      
+      <position height="18" width="0" x="0" y="790"/>    
+    </execution>  
+  </object>  
+  <object id="106" language="java" name="org.hibernate.Transaction" project="RA-SZZ" 
+    file="/RA-SZZ/libs/hibernate-core-4.1.5.Final.jar" binary="true" label="tx" type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="37">      
+      <position height="18" width="0" x="0" y="2401"/>    
+    </execution>  
+  </object>  
+  <combined-fragment id="107" interaction-operator="ALT">    
+    <interaction-operand id="108" constraint="(linkedRevs.size() != 0)">      
+      <fragment refId="10"/>    
+    </interaction-operand>    
+    <interaction-operand id="109" constraint="else">      
+      <fragment refId="12"/>    
+    </interaction-operand>  
+  </combined-fragment>  
+  <combined-fragment id="110" interaction-operator="ALT">    
+    <interaction-operand id="111" constraint="(linkedRevs.size() != 0)">      
+      <fragment refId="14"/>    
+    </interaction-operand>    
+    <interaction-operand id="112" constraint="else">      
+      <fragment refId="16"/>    
+    </interaction-operand>  
+  </combined-fragment>  
+  <combined-fragment id="113" interaction-operator="LOOP">    
+    <interaction-operand id="114" constraint="for: linkedRevs">      
+      <fragment refId="20"/>      
+      <fragment refId="115"/>      
+      <fragment refId="116"/>      
+      <fragment refId="18"/>    
+    </interaction-operand>    
+    <combined-fragment id="116" interaction-operator="LOOP">      
+      <interaction-operand id="117" constraint="for: paths">        
+        <fragment refId="44"/>        
+        <fragment refId="22"/>        
+        <fragment refId="26"/>        
+        <fragment refId="28"/>        
+        <fragment refId="40"/>        
+        <fragment refId="48"/>        
+        <fragment refId="50"/>        
+        <fragment refId="118"/>        
+        <fragment refId="24"/>        
+        <fragment refId="52"/>        
+        <fragment refId="58"/>        
+        <fragment refId="38"/>        
+        <fragment refId="54"/>        
+        <fragment refId="46"/>        
+        <fragment refId="42"/>        
+        <fragment refId="88"/>        
+        <fragment refId="56"/>      
+      </interaction-operand>      
+      <combined-fragment id="118" interaction-operator="LOOP">        
+        <interaction-operand id="119" constraint="for: hunks">          
+          <fragment refId="120"/>        
+        </interaction-operand>        
+        <combined-fragment id="120" interaction-operator="LOOP">          
+          <interaction-operand id="121" constraint="for: hunk.getContent()">            
+            <fragment refId="122"/>          
+          </interaction-operand>          
+          <combined-fragment id="122" interaction-operator="OPT">            
+            <interaction-operand id="123" constraint="linetotrace.getType() == LineType.DELETION">              
+              <fragment refId="124"/>            
+            </interaction-operand>            
+            <combined-fragment id="124" interaction-operator="OPT">              
+              <interaction-operand id="125" 
+                constraint="!isCommentOrBlankLine(linetotrace.getContent()) &amp;&amp; !isImport(linetotrace.getContent())">                
+                <fragment refId="70"/>                
+                <fragment refId="126"/>                
+                <fragment refId="74"/>                
+                <fragment refId="127"/>                
+                <fragment refId="68"/>                
+                <fragment refId="72"/>                
+                <fragment refId="76"/>                
+                <fragment refId="78"/>              
+              </interaction-operand>              
+              <combined-fragment id="126" interaction-operator="OPT">                
+                <interaction-operand id="128" 
+                  constraint="!refacRevProcSet.containsKey(linetotrace.getPreviousRevision())">                  
+                  <fragment refId="60"/>                  
+                  <fragment refId="66"/>                  
+                  <fragment refId="129"/>                  
+                  <fragment refId="62"/>                
+                </interaction-operand>                
+                <combined-fragment id="129" interaction-operator="OPT">                  
+                  <interaction-operand id="130" constraint="refElements != null">                    
+                    <fragment refId="64"/>                  
+                  </interaction-operand>                
+                </combined-fragment>              
+              </combined-fragment>              
+              <combined-fragment id="127" interaction-operator="ALT">                
+                <interaction-operand id="131" constraint="isrefac">                  
+                  <fragment refId="82"/>                  
+                  <fragment refId="84"/>                  
+                  <fragment refId="80"/>                
+                </interaction-operand>                
+                <interaction-operand id="132" constraint="else">                  
+                  <fragment refId="86"/>                
+                </interaction-operand>              
+              </combined-fragment>            
+            </combined-fragment>          
+          </combined-fragment>        
+        </combined-fragment>      
+      </combined-fragment>    
+    </combined-fragment>    
+    <combined-fragment id="115" interaction-operator="CRITICAL">      
+      <interaction-operand id="133" constraint="szzDAO">        
+        <fragment refId="134"/>        
+        <fragment refId="34"/>        
+        <fragment refId="36"/>        
+        <fragment refId="30"/>      
+      </interaction-operand>      
+      <combined-fragment id="134" interaction-operator="LOOP">        
+        <interaction-operand id="135" constraint="for: bicodes">          
+          <fragment refId="32"/>        
+        </interaction-operand>      
+      </combined-fragment>    
+    </combined-fragment>  
+  </combined-fragment>  
+  <note id="136">    
+    <position height="100" width="200" x="-25" y="1958"/>    
+    <text><![CDATA[Complementar essa chamada...]]>
+    </text>  
+  </note>  
+  <note id="137">    
+    <position height="100" width="200" x="-28" y="1710"/>    
+    <text><![CDATA[]]>
+    </text>  
+  </note>  
+  <note id="138">    
+    <position height="100" width="200" x="-29" y="1447"/>    
+    <text><![CDATA[]]>
+    </text>  
+  </note>  
+  <message id="3" operation="run():void" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="6" operation="buildAnnotationGraph(java.util.List&lt;java.lang.String&gt;):boolean" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="7"/>  
+  </message>  
+  <message id="8" operation="getAllRevisionProcessed(java.lang.String):java.util.List&lt;String&gt;" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="9"/>  
+  </message>  
+  <message id="10" operation="getRefacBic(java.lang.String):java.util.List&lt;RefElement&gt;" asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="11"/>  
+  </message>  
+  <message id="12" operation="ArrayList()" asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="13"/>  
+  </message>  
+  <message id="14" operation="getAllRefDiffRevisionsProcessed(java.lang.String):java.util.Map&lt;String,String&gt;" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="15"/>  
+  </message>  
+  <message id="16" operation="HashMap()" asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="17"/>  
+  </message>  
+  <message id="18" operation="AnnotationGraphModel()" asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="19"/>  
+  </message>  
+  <message id="20" operation="getChangedPaths(java.lang.String):java.util.List&lt;String&gt;" asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="21"/>  
+  </message>  
+  <message id="22" 
+    operation="extractSZZFilesFromPath(java.lang.String,java.lang.String,java.lang.String,boolean):java.util.LinkedList&lt;SzzFileRevision&gt;" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="23"/>  
+  </message>  
+  <message id="24" operation="AnnotationGraphBuilder()" asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="25"/>  
+  </message>  
+  <message id="26" 
+    operation="buildLinesModel(br.ufrn.razszz.connectoradapter.SzzRepository,java.util.LinkedList&lt;br.ufrn.raszz.model.szz.SzzFileRevision&gt;,java.lang.String,java.lang.String):br.ufrn.raszz.model.szz.AnnotationGraphModel" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="27"/>  
+  </message>  
+  <message id="28" 
+    operation="traceBack(br.ufrn.raszz.model.szz.AnnotationGraphModel,java.util.LinkedList&lt;br.ufrn.raszz.model.szz.SzzFileRevision&gt;):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="29"/>  
+  </message>  
+  <message id="30" operation="beginTransaction():org.hibernate.Transaction" asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="31"/>  
+  </message>  
+  <message id="32" 
+    operation="insertBugIntroducingCode(br.ufrn.raszz.model.szz.BugIntroducingCode,br.ufrn.raszz.model.SZZImplementationType):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="33"/>  
+  </message>  
+  <message id="34" operation="insertProjectRevisionsProcessed(java.lang.String,java.lang.String):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="35"/>  
+  </message>  
+  <message id="36" operation="commit():void" asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="37"/>  
+  </message>  
+  <message id="38" operation="getLast():E" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="39"/>  
+  </message>  
+  <message id="40" operation="get(int):E" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="41"/>  
+  </message>  
+  <message id="42" operation="indexOf(java.lang.Object):int" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="43"/>  
+  </message>  
+  <message id="44" 
+    operation="diffOperation(java.lang.String,br.ufrn.raszz.model.szz.SzzFileRevision,br.ufrn.raszz.model.szz.SzzFileRevision):java.io.ByteArrayOutputStream" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="45"/>  
+  </message>  
+  <message id="46" operation="getHeaders(java.io.ByteArrayOutputStream):java.util.List&lt;String&gt;" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="47"/>  
+  </message>  
+  <message id="48" 
+    operation="getDiffHunks(java.io.ByteArrayOutputStream,java.util.List&lt;java.lang.String&gt;,java.lang.String,java.lang.String,java.lang.String,java.lang.String):java.util.List&lt;DiffHunk&gt;" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="49"/>  
+  </message>  
+  <message id="50" operation="getPath():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="51"/>  
+  </message>  
+  <message id="52" operation="getPath():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="53"/>  
+  </message>  
+  <message id="54" operation="getRevision():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="55"/>  
+  </message>  
+  <message id="56" operation="getRevision():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="57"/>  
+  </message>  
+  <message id="58" operation="joinUnfinishedLines(java.util.List&lt;br.ufrn.raszz.model.szz.DiffHunk&gt;):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="59"/>  
+  </message>  
+  <message id="60" operation="getPreviousRevision():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="61"/>  
+  </message>  
+  <message id="62" 
+    operation="checkUpdateRefactoringDatabase(br.ufrn.razszz.connectoradapter.SzzRepository,java.lang.String,java.lang.String):java.util.List&lt;RefElement&gt;" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="63"/>  
+  </message>  
+  <message id="64" operation="addAll(java.util.Collection&lt;? extends E&gt;):boolean" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="65"/>  
+  </message>  
+  <message id="66" operation="put(K,V):V" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="67"/>  
+  </message>  
+  <message id="68" operation="hasRefacFix(java.lang.String,java.lang.String,int,int,java.lang.String):boolean" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="69"/>  
+  </message>  
+  <message id="70" operation="getPath():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="71"/>  
+  </message>  
+  <message id="72" operation="getRevision():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="73"/>  
+  </message>  
+  <message id="74" operation="getPreviousNumber():int" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="75"/>  
+  </message>  
+  <message id="76" operation="getAdjustmentIndex():int" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="77"/>  
+  </message>  
+  <message id="78" operation="getContent():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="79"/>  
+  </message>  
+  <message id="80" operation="getPreviousNumber():int" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="81"/>  
+  </message>  
+  <message id="82" operation="getPath():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="83"/>  
+  </message>  
+  <message id="84" operation="getRevision():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="85"/>  
+  </message>  
+  <message id="86" 
+    operation="createLinesInPreviousRevisions(br.ufrn.raszz.model.szz.AnnotationGraphModel,br.ufrn.raszz.model.szz.Line,br.ufrn.raszz.model.szz.SzzFileRevision,java.util.LinkedList&lt;br.ufrn.raszz.model.szz.SzzFileRevision&gt;,br.ufrn.raszz.model.szz.SzzFileRevision,boolean,int,int,boolean,br.ufrn.raszz.model.szz.SzzFileRevision,int,br.ufrn.raszz.model.szz.Line):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="87"/>  
+  </message>  
+  <message id="88" operation="close():void" asynchronous="false">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="89"/>  
+  </message>  
+  <text-link id="139">    
+    <link-end type="SOURCE" refId="137"/>    
+    <link-end type="TARGET" refId="78"/>  
+  </text-link>  
+  <text-link id="140">    
+    <link-end type="SOURCE" refId="138"/>    
+    <link-end type="TARGET" refId="64"/>  
+  </text-link>  
+  <text-link id="141">    
+    <link-end type="SOURCE" refId="136"/>    
+    <link-end type="TARGET" refId="86"/>  
+  </text-link>
+</sequence-diagram>

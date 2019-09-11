@@ -1,0 +1,49 @@
+<project name="diffj-1.0" basedir="." default="main">
+
+    <property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="lib.dir" 	 value="libs"/>
+    <property name="core-connector.libs" value="../core-connector/libs"/>
+    <property name="main-class"  value="br.ufrn.raszz.miner.szz.RaSZZ"/>
+
+    <path id="classpath">
+	    <fileset dir="${lib.dir}" includes="**/*.jar"/>
+	    <pathelement path="${core-connector.libs}"/>
+    </path>
+
+    <target name="clean">
+	    <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile">
+	    <mkdir dir="${classes.dir}"/>
+	    <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+	    <copy todir="${classes.dir}">
+		    <fileset dir="${src.dir}" excludes="**/*.java"/>
+	    </copy>
+    </target>
+
+    <target name="jar" depends="compile">
+	    <mkdir dir="${build.dir}"/>
+	<jar destfile="${build.dir}/${ant.project.name}.jar" basedir="build/classes">
+            <manifest>
+		    <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+	    <java fork="true" class-name="${main-class}">
+		    <classpath>
+			    <path refid="classpath"/>
+			    <path location="${build.dir}/${ant.project.name}.jar"/>
+		    </classpath>
+	    </java>
+
+    </target>
+
+    <target name="clean-build" depends="clean,jar"/>
+    <target name="main" depends="clean,run"/>
+
+</project>

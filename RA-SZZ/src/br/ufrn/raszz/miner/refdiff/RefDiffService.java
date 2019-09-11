@@ -42,7 +42,12 @@ public class RefDiffService {
 			refacDAO.insertRefacRevisionsProcessed(project, commitId, RefacToolType.REFDIFF);
 			break;
 		case SVN:
-			refElements =  executeSvn(repository.getUrl(), repository.getUser(), repository.getPassword(), project, commitId, repository.getRepositoryFolder(), revisionType);
+			refElements =  executeSvn(repository.getUrl(),
+					repository.getUser(),
+					repository.getPassword(), project,
+					commitId,
+					repository.getRepositoryFolder(),
+					revisionType);
 			refacDAO.insertRefacRevisionsProcessed(project, commitId, RefacToolType.REFDIFF);
 			break;
 		}

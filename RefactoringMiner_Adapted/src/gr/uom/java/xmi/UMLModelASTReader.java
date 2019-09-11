@@ -44,8 +44,12 @@ import org.refactoringminer.util.AstUtils;
 
 import gr.uom.java.xmi.decomposition.OperationBody;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class UMLModelASTReader {
 	public static final String systemFileSeparator = Matcher.quoteReplacement(File.separator);
+	Logger log = LoggerFactory.getLogger(UMLModelASTReader.class);
 	
 	private UMLModel umlModel;
 	private String projectRoot;
@@ -118,19 +122,19 @@ public class UMLModelASTReader {
 			packageName = packageDeclaration.getName().getFullyQualifiedName();
 		else
 			packageName = "";
-		
+
 		List<ImportDeclaration> imports = compilationUnit.imports();
 		List<String> importedTypes = new ArrayList<String>();
 		for(ImportDeclaration importDeclaration : imports) {
 			importedTypes.add(importDeclaration.getName().getFullyQualifiedName());
 		}
 		List<AbstractTypeDeclaration> topLevelTypeDeclarations = compilationUnit.types();
-        for(AbstractTypeDeclaration abstractTypeDeclaration : topLevelTypeDeclarations) {
-        	if(abstractTypeDeclaration instanceof TypeDeclaration) {
-        		TypeDeclaration topLevelTypeDeclaration = (TypeDeclaration)abstractTypeDeclaration;        		
-        		processTypeDeclaration(fileContents, topLevelTypeDeclaration, packageName, sourceFilePath, importedTypes, compilationUnit);
-        	}
-        }
+		for(AbstractTypeDeclaration abstractTypeDeclaration : topLevelTypeDeclarations) {
+			if(abstractTypeDeclaration instanceof TypeDeclaration) {
+				TypeDeclaration topLevelTypeDeclaration = (TypeDeclaration)abstractTypeDeclaration;        		
+				processTypeDeclaration(fileContents, topLevelTypeDeclaration, packageName, sourceFilePath, importedTypes, compilationUnit,0);
+			}
+		}
 	}
 
 	private String getTypeName(Type type, int extraDimensions) {
@@ -146,7 +150,9 @@ public class UMLModelASTReader {
 	}
 
 	private void processTypeDeclaration(String fileContents, TypeDeclaration typeDeclaration, String packageName, String sourceFile,
-			List<String> importedTypes, CompilationUnit compilationUnit) {
+			List<String> importedTypes, CompilationUnit compilationUnit, int recursionLevel) {
+		recursionLevel++;
+		log.info("the recursion level is: {}", recursionLevel);
 		Javadoc javaDoc = typeDeclaration.getJavadoc();
 		if(javaDoc != null) {
 			List<TagElement> tags = javaDoc.tags();
@@ -163,87 +169,95 @@ public class UMLModelASTReader {
 			}
 		}
 		String className = typeDeclaration.getName().getFullyQualifiedName();
-		
+
 		int first = compilationUnit.getLineNumber(AstUtils.startPositionFirstStatement(typeDeclaration));
 		LocationInfo locationInfo = generateLocationInfo(fileContents, sourceFile, typeDeclaration, first);
 		UMLClass umlClass = new UMLClass(packageName, className, locationInfo, typeDeclaration.isPackageMemberTypeDeclaration(), importedTypes);
-		
+
 		umlClass.setContent(typeDeclaration.toString());
-		
+
 		if(typeDeclaration.isInterface()) {
 			umlClass.setInterface(true);
-    	}
-    	
-    	int modifiers = typeDeclaration.getModifiers();
-    	if((modifiers & Modifier.ABSTRACT) != 0)
-    		umlClass.setAbstract(true);
-    	
-    	if((modifiers & Modifier.PUBLIC) != 0)
-    		umlClass.setVisibility("public");
-    	else if((modifiers & Modifier.PROTECTED) != 0)
-    		umlClass.setVisibility("protected");
-    	else if((modifiers & Modifier.PRIVATE) != 0)
-    		umlClass.setVisibility("private");
-    	else
-    		umlClass.setVisibility("package");
-		
-    	Type superclassType = typeDeclaration.getSuperclassType();
-    	if(superclassType != null) {
-    		UMLType umlType = UMLType.extractTypeObject(this.getTypeName(superclassType, 0));
-    		UMLGeneralization umlGeneralization = new UMLGeneralization(umlClass, umlType.getClassType());
-    		umlClass.setSuperclass(umlType);
-    		getUmlModel().addGeneralization(umlGeneralization);
-    	}
-    	
-    	List<Type> superInterfaceTypes = typeDeclaration.superInterfaceTypes();
-    	for(Type interfaceType : superInterfaceTypes) {
-    		UMLType umlType = UMLType.extractTypeObject(this.getTypeName(interfaceType, 0));
-    		UMLRealization umlRealization = new UMLRealization(umlClass, umlType.getClassType());
-    		umlClass.addImplementedInterface(umlType);
-    		getUmlModel().addRealization(umlRealization);
-    	}
-    	
-    	FieldDeclaration[] fieldDeclarations = typeDeclaration.getFields();
-    	for(FieldDeclaration fieldDeclaration : fieldDeclarations) {
-    		List<UMLAttribute> attributes = processFieldDeclaration(fileContents, fieldDeclaration, sourceFile, compilationUnit);
-    		for(UMLAttribute attribute : attributes) {
-    			attribute.setClassName(umlClass.getName());
-    			umlClass.addAttribute(attribute);
-    		}
-    	}
-    	
-    	MethodDeclaration[] methodDeclarations = typeDeclaration.getMethods();
-    	for(MethodDeclaration methodDeclaration : methodDeclarations) {    		
-    		UMLOperation operation = processMethodDeclaration(fileContents, methodDeclaration, packageName, className, sourceFile, compilationUnit);
-    		operation.setClassName(umlClass.getName());
-    		umlClass.addOperation(operation);
-    	}
-    	
-    	AnonymousClassDeclarationVisitor visitor = new AnonymousClassDeclarationVisitor();
-    	typeDeclaration.accept(visitor);
-    	Set<AnonymousClassDeclaration> anonymousClassDeclarations = visitor.getAnonymousClassDeclarations();
-    	
-    	DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-    	for(AnonymousClassDeclaration anonymous : anonymousClassDeclarations) {
-    		insertNode(anonymous, root);
-    	}
-    	
-    	Enumeration<DefaultMutableTreeNode> enumeration = root.preorderEnumeration();
-    	while(enumeration.hasMoreElements()) {
-    		DefaultMutableTreeNode node = enumeration.nextElement();
-    		if(node.getUserObject() != null) {
-    			AnonymousClassDeclaration anonymous = (AnonymousClassDeclaration)node.getUserObject();
-    			String anonymousName = getAnonymousName(node);
-    			UMLAnonymousClass anonymousClass = processAnonymousClassDeclaration(fileContents, anonymous, packageName + "." + className, anonymousName, sourceFile, compilationUnit);
-    			umlClass.addAnonymousClass(anonymousClass);
-    		}
-    	}
-    	
-    	this.getUmlModel().addClass(umlClass);
-		
+		}
+
+		int modifiers = typeDeclaration.getModifiers();
+		if((modifiers & Modifier.ABSTRACT) != 0)
+			umlClass.setAbstract(true);
+
+		if((modifiers & Modifier.PUBLIC) != 0)
+			umlClass.setVisibility("public");
+		else if((modifiers & Modifier.PROTECTED) != 0)
+			umlClass.setVisibility("protected");
+		else if((modifiers & Modifier.PRIVATE) != 0)
+			umlClass.setVisibility("private");
+		else
+			umlClass.setVisibility("package");
+
+		Type superclassType = typeDeclaration.getSuperclassType();
+		if(superclassType != null) {
+			UMLType umlType = UMLType.extractTypeObject(this.getTypeName(superclassType, 0));
+			UMLGeneralization umlGeneralization = new UMLGeneralization(umlClass, umlType.getClassType());
+			umlClass.setSuperclass(umlType);
+			getUmlModel().addGeneralization(umlGeneralization);
+		}
+
+		List<Type> superInterfaceTypes = typeDeclaration.superInterfaceTypes();
+		for(Type interfaceType : superInterfaceTypes) {
+			UMLType umlType = UMLType.extractTypeObject(this.getTypeName(interfaceType, 0));
+			UMLRealization umlRealization = new UMLRealization(umlClass, umlType.getClassType());
+			umlClass.addImplementedInterface(umlType);
+			getUmlModel().addRealization(umlRealization);
+		}
+
+		FieldDeclaration[] fieldDeclarations = typeDeclaration.getFields();
+		for(FieldDeclaration fieldDeclaration : fieldDeclarations) {
+			List<UMLAttribute> attributes = processFieldDeclaration(fileContents, fieldDeclaration, sourceFile, compilationUnit);
+			for(UMLAttribute attribute : attributes) {
+				attribute.setClassName(umlClass.getName());
+				umlClass.addAttribute(attribute);
+			}
+		}
+
+		MethodDeclaration[] methodDeclarations = typeDeclaration.getMethods();
+		for(MethodDeclaration methodDeclaration : methodDeclarations) {    		
+			UMLOperation operation = processMethodDeclaration(fileContents, methodDeclaration, packageName, className, sourceFile, compilationUnit);
+			operation.setClassName(umlClass.getName());
+			umlClass.addOperation(operation);
+		}
+
+		AnonymousClassDeclarationVisitor visitor = new AnonymousClassDeclarationVisitor();
+		typeDeclaration.accept(visitor);
+		Set<AnonymousClassDeclaration> anonymousClassDeclarations = visitor.getAnonymousClassDeclarations();
+
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+		for(AnonymousClassDeclaration anonymous : anonymousClassDeclarations) {
+			insertNode(anonymous, root);
+		}
+
+		Enumeration<DefaultMutableTreeNode> enumeration = root.preorderEnumeration();
+		while(enumeration.hasMoreElements()) {
+			DefaultMutableTreeNode node = enumeration.nextElement();
+			if(node.getUserObject() != null) {
+				AnonymousClassDeclaration anonymous = (AnonymousClassDeclaration)node.getUserObject();
+				String anonymousName = getAnonymousName(node);
+				UMLAnonymousClass anonymousClass =
+					processAnonymousClassDeclaration(fileContents,
+							anonymous, packageName
+							+ "." + className,
+							anonymousName,
+							sourceFile,
+							compilationUnit);
+				umlClass.addAnonymousClass(anonymousClass);
+			}
+		}
+
+		this.getUmlModel().addClass(umlClass);
+
 		TypeDeclaration[] types = typeDeclaration.getTypes();
+		//here we have a StackOverflowError if we are not careful! TOO MUCH RECURSION
+		//let's count the recursion
 		for(TypeDeclaration type : types) {
-			processTypeDeclaration(fileContents, type, umlClass.getName(), sourceFile, importedTypes, compilationUnit);
+			processTypeDeclaration(fileContents, type, umlClass.getName(), sourceFile, importedTypes, compilationUnit, recursionLevel);
 		}
 	}
 

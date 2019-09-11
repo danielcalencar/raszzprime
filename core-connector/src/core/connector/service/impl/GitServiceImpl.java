@@ -322,7 +322,8 @@ public class GitServiceImpl implements GitService {
 		return GitOperationsUtil.catOperation(repository, path, commitId);
 	}
 
-	public ByteArrayOutputStream diffOperation(Repository repository, String currentPath, String currentCommitId, String nextPath, String nextCommitId) throws GitAPIException, IOException {
+	public ByteArrayOutputStream diffOperation(Repository repository, String currentPath, String currentCommitId, String nextPath, 
+			String nextCommitId) throws GitAPIException, IOException {
 		return GitOperationsUtil.diffOperation(repository, currentPath, currentCommitId, nextPath, nextCommitId);
 	}
 	

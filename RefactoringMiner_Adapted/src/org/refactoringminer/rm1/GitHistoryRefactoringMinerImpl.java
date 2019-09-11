@@ -64,7 +64,11 @@ public class GitHistoryRefactoringMinerImpl<T> extends HistoryRefactoringMinerIm
 		logger.info(String.format("Analyzed %s [Commits: %d, Errors: %d, Refactorings: %d]", projectName, commitsCount, errorCommitsCount, refactoringsCount));
 	}
 
-	protected List<Refactoring> detectRefactorings(RMService<Repository> gitService, Repository repository, final RefactoringHandler<RevCommit> handler, File projectFolder, RevCommit currentCommit) throws Exception {
+	protected List<Refactoring> detectRefactorings(RMService<Repository> gitService, 
+			Repository repository, 
+			final RefactoringHandler<RevCommit> handler, 
+			File projectFolder, 
+			RevCommit currentCommit) throws Exception {
 		List<Refactoring> refactoringsAtRevision;
 		String commitId = currentCommit.getId().getName();
 		List<String> filesBefore = new ArrayList<String>();

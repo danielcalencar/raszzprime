@@ -55,6 +55,7 @@ public class UMLModelASTReader {
 	private ASTParser parser;
 
 	public UMLModelASTReader(File rootFolder, List<String> javaFiles) {
+		log.info("entering the UMLModelASTReader()");
 		this(rootFolder, buildAstParser(rootFolder), javaFiles);
 	}
 
@@ -260,20 +261,19 @@ public class UMLModelASTReader {
 		}
 	}
 
-	private UMLOperation processMethodDeclaration(String fileContents, MethodDeclaration methodDeclaration, String packageName, String className, String sourceFile, CompilationUnit compilationUnit) {
+	private UMLOperation processMethodDeclaration(String fileContents,
+			MethodDeclaration methodDeclaration, String
+			packageName, String className, String sourceFile,
+			CompilationUnit compilationUnit) { 
+
 		String methodName = methodDeclaration.getName().getFullyQualifiedName();
-		
 		int first = compilationUnit.getLineNumber(AstUtils.startPositionFirstStatement(methodDeclaration));
 		LocationInfo locationInfo = generateLocationInfo(fileContents, sourceFile, methodDeclaration, first);
-		
 		UMLOperation umlOperation = new UMLOperation(methodName, locationInfo);
 		//umlOperation.setClassName(umlClass.getName());
-		
 		umlOperation.setContent(methodDeclaration.toString());
-		
 		if(methodDeclaration.isConstructor())
 			umlOperation.setConstructor(true);
-		
 		int methodModifiers = methodDeclaration.getModifiers();
 		if((methodModifiers & Modifier.PUBLIC) != 0)
 			umlOperation.setVisibility("public");
@@ -283,16 +283,12 @@ public class UMLModelASTReader {
 			umlOperation.setVisibility("private");
 		else
 			umlOperation.setVisibility("package");
-		
 		if((methodModifiers & Modifier.ABSTRACT) != 0)
 			umlOperation.setAbstract(true);
-		
 		if((methodModifiers & Modifier.FINAL) != 0)
 			umlOperation.setFinal(true);
-		
 		if((methodModifiers & Modifier.STATIC) != 0)
 			umlOperation.setStatic(true);
-		
 		Block block = methodDeclaration.getBody();
 		if(block != null) {
 			OperationBody body = new OperationBody(block);
@@ -304,7 +300,6 @@ public class UMLModelASTReader {
 		else {
 			umlOperation.setBody(null);
 		}
-		
 		Type returnType = methodDeclaration.getReturnType2();
 		if(returnType != null) {
 			UMLType type = UMLType.extractTypeObject(getTypeName(returnType, 0));
@@ -327,21 +322,20 @@ public class UMLModelASTReader {
 	}
 
 
-	private List<UMLAttribute> processFieldDeclaration(String fileContents, FieldDeclaration fieldDeclaration, String sourceFile, CompilationUnit compilationUnit) {
+	private List<UMLAttribute> processFieldDeclaration(String fileContents,
+			FieldDeclaration fieldDeclaration, String sourceFile,
+			CompilationUnit compilationUnit) {
+
 		List<UMLAttribute> attributes = new ArrayList<UMLAttribute>();
 		Type fieldType = fieldDeclaration.getType();
 		List<VariableDeclarationFragment> fragments = fieldDeclaration.fragments();
 		for(VariableDeclarationFragment fragment : fragments) {
 			UMLType type = UMLType.extractTypeObject(getTypeName(fieldType, fragment.getExtraDimensions()));
 			String fieldName = fragment.getName().getFullyQualifiedName();
-			
 			int first = compilationUnit.getLineNumber(AstUtils.startPositionFirstStatement(fragment));
 			LocationInfo locationInfo = generateLocationInfo(fileContents, sourceFile, fragment, first);
 			UMLAttribute umlAttribute = new UMLAttribute(fieldName, type, locationInfo);
-			//umlAttribute.setClassName(umlClass.getName());
-			
 			umlAttribute.setContent(fragment.toString());
-			
 			int fieldModifiers = fieldDeclaration.getModifiers();
 			if((fieldModifiers & Modifier.PUBLIC) != 0)
 				umlAttribute.setVisibility("public");
@@ -351,39 +345,39 @@ public class UMLModelASTReader {
 				umlAttribute.setVisibility("private");
 			else
 				umlAttribute.setVisibility("package");
-			
 			if((fieldModifiers & Modifier.FINAL) != 0)
 				umlAttribute.setFinal(true);
-			
 			if((fieldModifiers & Modifier.STATIC) != 0)
 				umlAttribute.setStatic(true);
-			
 			attributes.add(umlAttribute);
 		}
 		return attributes;
 	}
 	
-	private UMLAnonymousClass processAnonymousClassDeclaration(String fileContents, AnonymousClassDeclaration anonymous, String packageName, String className, String sourceFile, CompilationUnit compilationUnit) {
+	private UMLAnonymousClass processAnonymousClassDeclaration(String
+			fileContents, AnonymousClassDeclaration anonymous,
+			String packageName, String className, String
+			sourceFile, CompilationUnit compilationUnit) {
+
 		List<BodyDeclaration> bodyDeclarations = anonymous.bodyDeclarations();
-		
 		int first = compilationUnit.getLineNumber(AstUtils.startPositionFirstStatement(anonymous));
 		LocationInfo locationInfo = generateLocationInfo(fileContents, sourceFile, anonymous, first);
 		UMLAnonymousClass anonymousClass = new UMLAnonymousClass(packageName, className, locationInfo);
 		anonymousClass.setContent(anonymous.toString());
-
 		
 		for(BodyDeclaration bodyDeclaration : bodyDeclarations) {
 			if(bodyDeclaration instanceof FieldDeclaration) {
 				FieldDeclaration fieldDeclaration = (FieldDeclaration)bodyDeclaration;
 				List<UMLAttribute> attributes = processFieldDeclaration(fileContents, fieldDeclaration, sourceFile, compilationUnit);
-	    		for(UMLAttribute attribute : attributes) {
-	    			attribute.setClassName(anonymousClass.getName());
-	    			anonymousClass.addAttribute(attribute);
-	    		}
+				for(UMLAttribute attribute : attributes) {
+					attribute.setClassName(anonymousClass.getName());
+					anonymousClass.addAttribute(attribute);
+				}
 			}
 			else if(bodyDeclaration instanceof MethodDeclaration) {
 				MethodDeclaration methodDeclaration = (MethodDeclaration)bodyDeclaration;
-				UMLOperation operation = processMethodDeclaration(fileContents, methodDeclaration, packageName, className, sourceFile, compilationUnit);
+				UMLOperation operation = processMethodDeclaration(fileContents, methodDeclaration, packageName, 
+						className, sourceFile, compilationUnit);
 				operation.setClassName(anonymousClass.getName());
 				anonymousClass.addOperation(operation);
 			}
@@ -393,9 +387,9 @@ public class UMLModelASTReader {
 	}
 	
 	private void insertNode(AnonymousClassDeclaration childAnonymous, DefaultMutableTreeNode root) {
+
 		Enumeration<DefaultMutableTreeNode> enumeration = root.postorderEnumeration();
 		DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(childAnonymous);
-		
 		DefaultMutableTreeNode parentNode = root;
 		while(enumeration.hasMoreElements()) {
 			DefaultMutableTreeNode currentNode = enumeration.nextElement();

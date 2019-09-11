@@ -55,11 +55,11 @@ public class UMLModelASTReader {
 	private ASTParser parser;
 
 	public UMLModelASTReader(File rootFolder, List<String> javaFiles) {
-		log.info("entering the UMLModelASTReader()");
 		this(rootFolder, buildAstParser(rootFolder), javaFiles);
 	}
 
 	public UMLModelASTReader(File rootFolder, ASTParser parser, List<String> javaFiles) {
+		log.info("entering the UMLModelASTReader()");
 		this.umlModel = new UMLModel(rootFolder.getPath());
 		this.projectRoot = rootFolder.getPath();
 		this.parser = parser;

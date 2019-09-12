@@ -200,21 +200,27 @@ public class UMLModelASTReader {
 			umlClass.setVisibility("package");
 
 		Type superclassType = typeDeclaration.getSuperclassType();
+		log.info("reached here if(superclassType != null)");
 		if(superclassType != null) {
 			UMLType umlType = UMLType.extractTypeObject(this.getTypeName(superclassType, 0));
 			UMLGeneralization umlGeneralization = new UMLGeneralization(umlClass, umlType.getClassType());
 			umlClass.setSuperclass(umlType);
 			getUmlModel().addGeneralization(umlGeneralization);
 		}
+		log.info("went out from (superclassType != null)");
 
 		List<Type> superInterfaceTypes = typeDeclaration.superInterfaceTypes();
+		log.info("reached here (Type interfaceType : superInterfaceTypes)");
 		for(Type interfaceType : superInterfaceTypes) {
 			UMLType umlType = UMLType.extractTypeObject(this.getTypeName(interfaceType, 0));
 			UMLRealization umlRealization = new UMLRealization(umlClass, umlType.getClassType());
 			umlClass.addImplementedInterface(umlType);
 			getUmlModel().addRealization(umlRealization);
 		}
+		log.info("went out from (Type interfaceType : superInterfaceTypes)");
 
+
+		log.info("reached here (FieldDeclaration fieldDeclaration : fieldDeclarations)");
 		FieldDeclaration[] fieldDeclarations = typeDeclaration.getFields();
 		for(FieldDeclaration fieldDeclaration : fieldDeclarations) {
 			List<UMLAttribute> attributes = processFieldDeclaration(fileContents, fieldDeclaration, sourceFile, compilationUnit);
@@ -223,23 +229,32 @@ public class UMLModelASTReader {
 				umlClass.addAttribute(attribute);
 			}
 		}
+		log.info("went out from here (FieldDeclaration fieldDeclaration : fieldDeclarations)");
 
+		log.info("reached here (MethodDeclaration methodDeclaration : methodDeclarations)");
 		MethodDeclaration[] methodDeclarations = typeDeclaration.getMethods();
 		for(MethodDeclaration methodDeclaration : methodDeclarations) {    		
 			UMLOperation operation = processMethodDeclaration(fileContents, methodDeclaration, packageName, className, sourceFile, compilationUnit);
 			operation.setClassName(umlClass.getName());
 			umlClass.addOperation(operation);
 		}
+		log.info("went out from here (MethodDeclaration methodDeclaration : methodDeclarations)");
 
+		log.info("accepting visitor");
 		AnonymousClassDeclarationVisitor visitor = new AnonymousClassDeclarationVisitor();
 		typeDeclaration.accept(visitor);
 		Set<AnonymousClassDeclaration> anonymousClassDeclarations = visitor.getAnonymousClassDeclarations();
+		log.info("ended the visitor acceptance");
 
+
+		log.info("entering node insertion");
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 		for(AnonymousClassDeclaration anonymous : anonymousClassDeclarations) {
 			insertNode(anonymous, root);
 		}
+		log.info("went out from node insertion");
 
+		log.info("entering while with has more elements");
 		Enumeration<DefaultMutableTreeNode> enumeration = root.preorderEnumeration();
 		while(enumeration.hasMoreElements()) {
 			DefaultMutableTreeNode node = enumeration.nextElement();
@@ -256,15 +271,21 @@ public class UMLModelASTReader {
 				umlClass.addAnonymousClass(anonymousClass);
 			}
 		}
+		log.info("finished while");
 
+		log.info("getting UML model");
 		this.getUmlModel().addClass(umlClass);
+		log.info("we have gotten the model!");
 
+
+		log.info("entering the loop of the processTypeDeclaration() method");
 		TypeDeclaration[] types = typeDeclaration.getTypes();
 		//here we have a StackOverflowError if we are not careful! TOO MUCH RECURSION
 		//let's count the recursion
 		for(TypeDeclaration type : types) {
 			processTypeDeclaration(fileContents, type, umlClass.getName(), sourceFile, importedTypes, compilationUnit, recursionLevel);
 		}
+		log.info("went out from the loop");
 	}
 
 	private UMLOperation processMethodDeclaration(String fileContents,

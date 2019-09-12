@@ -25,8 +25,11 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.refactoringminer.api.Refactoring;
+import org.apache.log4j.Logger;
 
 public class UMLModelDiff {
+
+	private static final Logger = Logger.getClass(UMLModelDiff.class);
 	private List<UMLClass> addedClasses;
 	private List<UMLClass> removedClasses;
 
@@ -719,22 +722,35 @@ public class UMLModelDiff {
 
 	public List<Refactoring> getRefactorings() {
 		List<Refactoring> refactorings = new ArrayList<Refactoring>();
+		log.info("entering getMoveClassRefactorings");
 		refactorings.addAll(getMoveClassRefactorings());
+		log.info("entering getRenameClassRefactorings");
 		refactorings.addAll(getRenameClassRefactorings());
+		log.info("entering identifyConvertAnonymousClassToTypeRefactorings");
 		refactorings.addAll(identifyConvertAnonymousClassToTypeRefactorings());
+		log.info("entering checkForOperationMovesBetweenCommonClasses");
 		refactorings.addAll(checkForAttributeMovesBetweenCommonClasses());
+		log.info("entering identifyExtractSuperclassRefactorings");
 		refactorings.addAll(identifyExtractSuperclassRefactorings());
+		log.info("entering checkForOperationMovesIncludingAddedClasses");
 		refactorings.addAll(checkForAttributeMovesIncludingAddedClasses());
+		log.info("entering checkForAttributeMovesIncludingRemovedClasses");
 		refactorings.addAll(checkForAttributeMovesIncludingRemovedClasses());
-
+		log.info("entering for(classDiff : commonClassDiffList)");
 		for(UMLClassDiff classDiff : commonClassDiffList) {
 			refactorings.addAll(classDiff.getRefactorings());
 		}
+		log.info("entering checkForOperationMovesBetweenCommonClasses()");
 		checkForOperationMovesBetweenCommonClasses();
+		log.info("entering checkForExtractedAndMovedOperations()");
 		checkForExtractedAndMovedOperations();
+		log.info("entering checkForOperationMovesIncludingAddedClasses()");
 		checkForOperationMovesIncludingAddedClasses();
+		log.info("entering checkForOperationMovesIncludingRemovedClasses()");
 		checkForOperationMovesIncludingRemovedClasses();
+		log.info("adding everything");
 		refactorings.addAll(this.refactorings);
+		log.info("returning refactorings");
 		return refactorings;
 	}
 

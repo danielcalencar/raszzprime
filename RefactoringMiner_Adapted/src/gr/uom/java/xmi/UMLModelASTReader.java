@@ -64,6 +64,7 @@ public class UMLModelASTReader {
 		this.projectRoot = rootFolder.getPath();
 		this.parser = parser;
 		final String[] emptyArray = new String[0];
+		int recursionLevel = 0;
 		
 		String[] filesArray = new String[javaFiles.size()];
 		for (int i = 0; i < filesArray.length; i++) {
@@ -75,7 +76,7 @@ public class UMLModelASTReader {
 			public void acceptAST(String sourceFilePath, CompilationUnit ast) {
 				String relativePath = sourceFilePath.substring(projectRoot.length() + 1).replaceAll(systemFileSeparator, "/");
 				String fileContents = readFileContents(sourceFilePath);
-				processCompilationUnit(fileContents, relativePath, ast);
+				processCompilationUnit(fileContents, relativePath, ast, recursionLevel);
 			}
 		};
 		this.parser.createASTs((String[]) filesArray, null, emptyArray, fileASTRequestor, null);
@@ -115,8 +116,12 @@ public class UMLModelASTReader {
 		return this.umlModel;
 	}
 
-	protected void processCompilationUnit(String fileContents, String sourceFilePath, CompilationUnit compilationUnit) {
+	protected void processCompilationUnit(String fileContents, String sourceFilePath, 
+			CompilationUnit compilationUnit, int recursionLevel) {
 		PackageDeclaration packageDeclaration = compilationUnit.getPackage();
+
+		recursionLevel++;
+		log.info(String.format("Recursion level: %s",recursionLevel));
 		String packageName = null;
 		if(packageDeclaration != null)
 			packageName = packageDeclaration.getName().getFullyQualifiedName();
@@ -132,7 +137,8 @@ public class UMLModelASTReader {
 		for(AbstractTypeDeclaration abstractTypeDeclaration : topLevelTypeDeclarations) {
 			if(abstractTypeDeclaration instanceof TypeDeclaration) {
 				TypeDeclaration topLevelTypeDeclaration = (TypeDeclaration)abstractTypeDeclaration;        		
-				processTypeDeclaration(fileContents, topLevelTypeDeclaration, packageName, sourceFilePath, importedTypes, compilationUnit,0);
+				processTypeDeclaration(fileContents, topLevelTypeDeclaration, packageName, sourceFilePath, importedTypes, compilationUnit,
+						recursionLevel);
 			}
 		}
 	}
@@ -152,7 +158,7 @@ public class UMLModelASTReader {
 	private void processTypeDeclaration(String fileContents, TypeDeclaration typeDeclaration, String packageName, String sourceFile,
 			List<String> importedTypes, CompilationUnit compilationUnit, int recursionLevel) {
 		recursionLevel++;
-		log.info("the recursion level is: " + recursionLevel);
+		log.info(String.format("Recursion level: %s ", recursionLevel));
 		Javadoc javaDoc = typeDeclaration.getJavadoc();
 		if(javaDoc != null) {
 			List<TagElement> tags = javaDoc.tags();

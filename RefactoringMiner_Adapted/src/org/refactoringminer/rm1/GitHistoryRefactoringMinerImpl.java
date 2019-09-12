@@ -24,11 +24,14 @@ import org.refactoringminer.api.RMService;
 import org.refactoringminer.api.Refactoring;
 import org.refactoringminer.api.RefactoringHandler;
 import org.refactoringminer.util.GitServiceImpl;
+import org.apache.lo4j.Logger;
 
 import gr.uom.java.xmi.UMLModel;
 import gr.uom.java.xmi.UMLModelASTReader;
 
 public class GitHistoryRefactoringMinerImpl<T> extends HistoryRefactoringMinerImpl<T> implements HistoryRefactoringMiner<T> {
+
+	private static final Logger log = Logger.getLogger(GitHistoryRefactoringMinerImpl.class);
 	
 	private void detect(RMService<Repository> gitService, Repository repository, final RefactoringHandler<RevCommit> handler, Iterator<RevCommit> i) {
 		int commitsCount = 0;
@@ -89,7 +92,9 @@ public class GitHistoryRefactoringMinerImpl<T> extends HistoryRefactoringMinerIm
 			
 			// Diff between currentModel e parentModel
 			refactoringsAtRevision = parentUMLModel.diff(currentUMLModel, renamedFilesHint).getRefactorings();
+			log.info("out from method diff");
 			refactoringsAtRevision = filter(refactoringsAtRevision);
+			log.info("out from filter");
 			
 		} else {
 			//logger.info(String.format("Ignored revision %s with no changes in java files", commitId));
@@ -98,6 +103,7 @@ public class GitHistoryRefactoringMinerImpl<T> extends HistoryRefactoringMinerIm
 		
 		handler.handle(commitId, refactoringsAtRevision);
 		handler.handle(currentCommit, refactoringsAtRevision);
+		log.info("out from handlers");
 
 		System.out.println(refactoringsAtRevision.toString());
 		return refactoringsAtRevision;

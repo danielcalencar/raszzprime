@@ -110,9 +110,12 @@ public class UMLModelDiff {
 		return null;
 	}
 
-	private boolean isSubclassOf(String subclass, String finalSuperclass, int recursionLevel) {
+	private boolean isSubclassOf(String subclass, String finalSuperclass, int recursionLevel) throws Exception {
 		recursionLevel++;
-		log.info(String.format("recursion level: %s ", recursionLevel));
+		if(recursionLevel > 7880000){
+			throw new Exception("Too much recursion, let us avoid a StackOverflowError");
+		}
+		//log.info(String.format("recursion level: %s ", recursionLevel));
 		UMLClassDiff subclassDiff = getUMLClassDiff(subclass);
 		if(subclassDiff == null) {
 			subclassDiff = getUMLClassDiff(UMLType.extractTypeObject(subclass));
@@ -171,9 +174,12 @@ public class UMLModelDiff {
 		return false;
 	}
 
-	private boolean checkInheritanceRelationship(UMLType superclass, String finalSuperclass, int recursionLevel) {
+	private boolean checkInheritanceRelationship(UMLType superclass, String finalSuperclass, int recursionLevel) throws Exception {
 		recursionLevel++;
-		log.info(String.format("recursion level: %s",recursionLevel));
+		if(recursionLevel > 7880000){
+			throw new Exception("Too much recursion, let us avoid a StackOverflowError");
+		}
+		//log.info(String.format("recursion level: %s",recursionLevel));
 		if(looksLikeSameType(superclass.getClassType(), finalSuperclass))
 			return true;
 		else
@@ -394,7 +400,7 @@ public class UMLModelDiff {
 		return addedRealizations;
 	}
 
-	private List<MoveAttributeRefactoring> checkForAttributeMovesIncludingRemovedClasses() {
+	private List<MoveAttributeRefactoring> checkForAttributeMovesIncludingRemovedClasses() throws Exception {
 		List<UMLAttribute> addedAttributes = getAddedAttributesInCommonClasses();
 		/*for(UMLClass addedClass : addedClasses) {
 		  addedAttributes.addAll(addedClass.getAttributes());
@@ -406,7 +412,7 @@ public class UMLModelDiff {
 		return checkForAttributeMoves(addedAttributes, removedAttributes);
 	}
 
-	private List<MoveAttributeRefactoring> checkForAttributeMovesIncludingAddedClasses() {
+	private List<MoveAttributeRefactoring> checkForAttributeMovesIncludingAddedClasses() throws Exception {
 		List<UMLAttribute> addedAttributes = getAddedAttributesInCommonClasses();
 		for(UMLClass addedClass : addedClasses) {
 			addedAttributes.addAll(addedClass.getAttributes());
@@ -418,13 +424,13 @@ public class UMLModelDiff {
 		return checkForAttributeMoves(addedAttributes, removedAttributes);
 	}
 
-	private List<MoveAttributeRefactoring> checkForAttributeMovesBetweenCommonClasses() {
+	private List<MoveAttributeRefactoring> checkForAttributeMovesBetweenCommonClasses() throws Exception {
 		List<UMLAttribute> addedAttributes = getAddedAttributesInCommonClasses();
 		List<UMLAttribute> removedAttributes = getRemovedAttributesInCommonClasses();
 		return checkForAttributeMoves(addedAttributes, removedAttributes);
 	}
 
-	private List<MoveAttributeRefactoring> checkForAttributeMoves(List<UMLAttribute> addedAttributes, List<UMLAttribute> removedAttributes) {
+	private List<MoveAttributeRefactoring> checkForAttributeMoves(List<UMLAttribute> addedAttributes, List<UMLAttribute> removedAttributes) throws Exception {
 		List<MoveAttributeRefactoring> refactorings = new ArrayList<MoveAttributeRefactoring>();
 		for(UMLAttribute addedAttribute : addedAttributes) {
 			for(UMLAttribute removedAttribute : removedAttributes) {
@@ -553,7 +559,13 @@ public class UMLModelDiff {
 			}
 			for(UMLRealization addedRealization : addedRealizations) {
 				String supplier = addedRealization.getSupplier();
-				if(looksLikeSameType(supplier, addedClassName) && topLevelOrSameOuterClass(addedClass, addedRealization.getClient()) && getAddedClass(addedRealization.getClient().getName()) == null) {
+				if(looksLikeSameType(supplier, addedClassName)
+						&&
+						topLevelOrSameOuterClass(addedClass,
+							addedRealization.getClient())
+						&&
+						getAddedClass(addedRealization.getClient().getName())
+						== null) {
 					UMLClassDiff clientClassDiff = getUMLClassDiff(addedRealization.getClient().getName());
 					boolean implementedInterfaceOperations = true;
 					if(clientClassDiff != null) {
@@ -630,7 +642,10 @@ public class UMLModelDiff {
 				for(UMLClass addedClass : addedClasses) {
 					if(addedClass.getAttributes().containsAll(anonymousClass.getAttributes()) &&
 							addedClass.getOperations().containsAll(anonymousClass.getOperations())) {
-						ConvertAnonymousClassToTypeRefactoring refactoring = new ConvertAnonymousClassToTypeRefactoring(anonymousClass, addedClass);
+						ConvertAnonymousClassToTypeRefactoring
+							refactoring = new
+							ConvertAnonymousClassToTypeRefactoring(anonymousClass,
+									addedClass);
 						refactorings.add(refactoring);
 							}
 				}
@@ -677,7 +692,13 @@ public class UMLModelDiff {
 					}
 				}
 			} else if(!originalPathPrefix.equals(movedPathPrefix)) {
-				MovedClassToAnotherSourceFolder refactoring = new MovedClassToAnotherSourceFolder(originalName, originalPathPrefix, movedPathPrefix, originalClass, movedClass);
+				MovedClassToAnotherSourceFolder refactoring =
+					new
+					MovedClassToAnotherSourceFolder(originalName,
+							originalPathPrefix,
+							movedPathPrefix,
+							originalClass,
+							movedClass);
 				RenamePattern renamePattern = refactoring.getRenamePattern();
 				boolean foundInMatchingMoveSourceFolderRefactoring = false;
 				for(MoveSourceFolderRefactoring moveSourceFolderRefactoring : moveSourceFolderRefactorings) {
@@ -727,41 +748,51 @@ public class UMLModelDiff {
 		return refactorings;
 	}
 
-	public List<Refactoring> getRefactorings() {
+	public List<Refactoring> getRefactorings() throws Exception {
 		List<Refactoring> refactorings = new ArrayList<Refactoring>();
-		log.info("entering getMoveClassRefactorings");
-		refactorings.addAll(getMoveClassRefactorings());
-		log.info("entering getRenameClassRefactorings");
-		refactorings.addAll(getRenameClassRefactorings());
-		log.info("entering identifyConvertAnonymousClassToTypeRefactorings");
-		refactorings.addAll(identifyConvertAnonymousClassToTypeRefactorings());
-		log.info("entering checkForOperationMovesBetweenCommonClasses");
-		refactorings.addAll(checkForAttributeMovesBetweenCommonClasses());
-		log.info("entering identifyExtractSuperclassRefactorings");
-		refactorings.addAll(identifyExtractSuperclassRefactorings());
-		log.info("entering checkForOperationMovesIncludingAddedClasses");
-		refactorings.addAll(checkForAttributeMovesIncludingAddedClasses());
-		log.info("entering checkForAttributeMovesIncludingRemovedClasses");
-		refactorings.addAll(checkForAttributeMovesIncludingRemovedClasses());
-		log.info("entering for(classDiff : commonClassDiffList)");
-		for(UMLClassDiff classDiff : commonClassDiffList) {
-			refactorings.addAll(classDiff.getRefactorings());
+		try {
+			log.info("entering getMoveClassRefactorings");
+			refactorings.addAll(getMoveClassRefactorings());
+			log.info("entering getRenameClassRefactorings");
+			refactorings.addAll(getRenameClassRefactorings());
+			log.info("entering identifyConvertAnonymousClassToTypeRefactorings");
+			refactorings.addAll(identifyConvertAnonymousClassToTypeRefactorings());
+			log.info("entering checkForAttributeMovesBetweenCommonClasses");
+			refactorings.addAll(checkForAttributeMovesBetweenCommonClasses());
+			log.info("entering identifyExtractSuperclassRefactorings");
+			refactorings.addAll(identifyExtractSuperclassRefactorings());
+			log.info("entering checkForOperationMovesIncludingAddedClasses");
+			refactorings.addAll(checkForAttributeMovesIncludingAddedClasses());
+			log.info("entering checkForAttributeMovesIncludingRemovedClasses");
+			refactorings.addAll(checkForAttributeMovesIncludingRemovedClasses());
+			log.info("entering for(classDiff : commonClassDiffList)");
+			for(UMLClassDiff classDiff : commonClassDiffList) {
+				refactorings.addAll(classDiff.getRefactorings());
+			}
+			log.info("entering checkForOperationMovesBetweenCommonClasses()");
+			checkForOperationMovesBetweenCommonClasses();
+			log.info("entering checkForExtractedAndMovedOperations()");
+			checkForExtractedAndMovedOperations();
+			log.info("entering checkForOperationMovesIncludingAddedClasses()");
+			checkForOperationMovesIncludingAddedClasses();
+			log.info("entering checkForOperationMovesIncludingRemovedClasses()");
+			checkForOperationMovesIncludingRemovedClasses();
+			log.info("adding everything");
+			refactorings.addAll(this.refactorings);
+			log.info("returning refactorings");
+			return refactorings;
+		} catch (Exception e) {
+			if(e.getMessage().equals("Too much recursion, let us avoid a StackOverflowError")){
+				log.info("too much recursion here... To avoid a StackOverflow we are returning the refactoring found so far.");
+				refactorings.addAll(this.refactorings);
+				return refactorings;
+			} else {
+				throw e;
+			}
 		}
-		log.info("entering checkForOperationMovesBetweenCommonClasses()");
-		checkForOperationMovesBetweenCommonClasses();
-		log.info("entering checkForExtractedAndMovedOperations()");
-		checkForExtractedAndMovedOperations();
-		log.info("entering checkForOperationMovesIncludingAddedClasses()");
-		checkForOperationMovesIncludingAddedClasses();
-		log.info("entering checkForOperationMovesIncludingRemovedClasses()");
-		checkForOperationMovesIncludingRemovedClasses();
-		log.info("adding everything");
-		refactorings.addAll(this.refactorings);
-		log.info("returning refactorings");
-		return refactorings;
 	}
 
-	private void checkForExtractedAndMovedOperations() {
+	private void checkForExtractedAndMovedOperations() throws Exception {
 		List<UMLOperation> addedOperations = getAddedOperationsInCommonClasses();
 		for(Iterator<UMLOperation> addedOperationIterator = addedOperations.iterator(); addedOperationIterator.hasNext();) {
 			UMLOperation addedOperation = addedOperationIterator.next();
@@ -858,7 +889,7 @@ public class UMLModelDiff {
 		}
 	}
 
-	private void checkForOperationMovesIncludingRemovedClasses() {
+	private void checkForOperationMovesIncludingRemovedClasses() throws Exception {
 		List<UMLOperation> addedOperations = getAddedOperationsInCommonClasses();
 		/*for(UMLClass addedClass : addedClasses) {
 		  addedOperations.addAll(addedClass.getOperations());
@@ -870,7 +901,7 @@ public class UMLModelDiff {
 		checkForOperationMoves(addedOperations, removedOperations);
 	}
 
-	private void checkForOperationMovesIncludingAddedClasses() {
+	private void checkForOperationMovesIncludingAddedClasses() throws Exception {
 		List<UMLOperation> addedOperations = getAddedOperationsInCommonClasses();
 		for(UMLClass addedClass : addedClasses) {
 			addedOperations.addAll(addedClass.getOperations());
@@ -882,13 +913,13 @@ public class UMLModelDiff {
 		checkForOperationMoves(addedOperations, removedOperations);
 	}
 
-	private void checkForOperationMovesBetweenCommonClasses() {
+	private void checkForOperationMovesBetweenCommonClasses() throws Exception {
 		List<UMLOperation> addedOperations = getAddedOperationsInCommonClasses();
 		List<UMLOperation> removedOperations = getRemovedOperationsInCommonClasses();
 		checkForOperationMoves(addedOperations, removedOperations);
 	}
 
-	private void checkForOperationMoves(List<UMLOperation> addedOperations, List<UMLOperation> removedOperations) {
+	private void checkForOperationMoves(List<UMLOperation> addedOperations, List<UMLOperation> removedOperations) throws Exception {
 		if(addedOperations.size() <= removedOperations.size()) {
 			for(Iterator<UMLOperation> addedOperationIterator = addedOperations.iterator(); addedOperationIterator.hasNext();) {
 				UMLOperation addedOperation = addedOperationIterator.next();
@@ -899,7 +930,11 @@ public class UMLModelDiff {
 					UMLOperationBodyMapper operationBodyMapper = new UMLOperationBodyMapper(removedOperation, addedOperation);
 					operationBodyMapper.getMappings();
 					int mappings = operationBodyMapper.mappingsWithoutBlocks();
-					if(mappings > 0 && mappings > operationBodyMapper.nonMappedElementsT1() && mappings > operationBodyMapper.nonMappedElementsT2()) {
+					if(mappings > 0 && mappings >
+							operationBodyMapper.nonMappedElementsT1()
+							&& mappings >
+							operationBodyMapper.nonMappedElementsT2())
+					{
 						int exactMatches = operationBodyMapper.exactMatches();
 						if(operationBodyMapperMap.containsKey(exactMatches)) {
 							List<UMLOperationBodyMapper> mapperList = operationBodyMapperMap.get(exactMatches);
@@ -935,21 +970,21 @@ public class UMLModelDiff {
 									 ||
 									 addedOperation.overloadedParameters(removedOperation)))
 							{
-							refactoring = new PullUpOperationRefactoring(firstMapper);
-						}
-						else
-							if(isSubclassOf(addedOperation.getClassName(),
-										removedOperation.getClassName(),0)
-									&&
-									(addedOperation.equalParameters(removedOperation)
-									 ||
-									 addedOperation.overloadedParameters(removedOperation)))
-							{
-							refactoring = new PushDownOperationRefactoring(firstMapper);
-						}
-						else if(movedMethodSignature(removedOperation, addedOperation) && !refactoringListContainsAnotherMoveRefactoringWithTheSameOperations(removedOperation, addedOperation)) {
-							refactoring = new MoveOperationRefactoring(firstMapper);
-						}
+								refactoring = new PullUpOperationRefactoring(firstMapper);
+							}
+							else
+								if(isSubclassOf(addedOperation.getClassName(),
+											removedOperation.getClassName(),0)
+										&&
+										(addedOperation.equalParameters(removedOperation)
+										 ||
+										 addedOperation.overloadedParameters(removedOperation)))
+								{
+									refactoring = new PushDownOperationRefactoring(firstMapper);
+								}
+								else if(movedMethodSignature(removedOperation, addedOperation) && !refactoringListContainsAnotherMoveRefactoringWithTheSameOperations(removedOperation, addedOperation)) {
+									refactoring = new MoveOperationRefactoring(firstMapper);
+								}
 						if(refactoring != null) {
 							deleteRemovedOperation(removedOperation);
 							deleteAddedOperation(addedOperation);
@@ -1005,21 +1040,21 @@ public class UMLModelDiff {
 									 ||
 									 addedOperation.overloadedParameters(removedOperation)))
 							{
-							refactoring = new PullUpOperationRefactoring(firstMapper);
-						}
-						else
-							if(isSubclassOf(addedOperation.getClassName(),
-										removedOperation.getClassName(),0)
-									&&
-									(addedOperation.equalParameters(removedOperation)
-									 ||
-									 addedOperation.overloadedParameters(removedOperation)))
-							{
-							refactoring = new PushDownOperationRefactoring(firstMapper);
-						}
-						else if(movedMethodSignature(removedOperation, addedOperation) && !refactoringListContainsAnotherMoveRefactoringWithTheSameOperations(removedOperation, addedOperation)) {
-							refactoring = new MoveOperationRefactoring(firstMapper);
-						}
+								refactoring = new PullUpOperationRefactoring(firstMapper);
+							}
+							else
+								if(isSubclassOf(addedOperation.getClassName(),
+											removedOperation.getClassName(),0)
+										&&
+										(addedOperation.equalParameters(removedOperation)
+										 ||
+										 addedOperation.overloadedParameters(removedOperation)))
+								{
+									refactoring = new PushDownOperationRefactoring(firstMapper);
+								}
+								else if(movedMethodSignature(removedOperation, addedOperation) && !refactoringListContainsAnotherMoveRefactoringWithTheSameOperations(removedOperation, addedOperation)) {
+									refactoring = new MoveOperationRefactoring(firstMapper);
+								}
 						if(refactoring != null) {
 							deleteRemovedOperation(removedOperation);
 							deleteAddedOperation(addedOperation);

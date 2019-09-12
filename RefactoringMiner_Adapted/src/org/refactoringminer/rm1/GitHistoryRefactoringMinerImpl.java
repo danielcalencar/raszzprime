@@ -91,6 +91,7 @@ public class GitHistoryRefactoringMinerImpl<T> extends HistoryRefactoringMinerIm
 			UMLModel currentUMLModel = createModel(projectFolder, filesCurrent);
 			
 			// Diff between currentModel e parentModel
+			log.info("entering diff");
 			refactoringsAtRevision = parentUMLModel.diff(currentUMLModel, renamedFilesHint).getRefactorings();
 			log.info("out from method diff");
 			refactoringsAtRevision = filter(refactoringsAtRevision);

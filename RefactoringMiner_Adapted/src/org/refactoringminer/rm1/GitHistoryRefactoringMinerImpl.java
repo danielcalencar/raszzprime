@@ -24,7 +24,7 @@ import org.refactoringminer.api.RMService;
 import org.refactoringminer.api.Refactoring;
 import org.refactoringminer.api.RefactoringHandler;
 import org.refactoringminer.util.GitServiceImpl;
-import org.apache.lo4j.Logger;
+import org.apache.log4j.Logger;
 
 import gr.uom.java.xmi.UMLModel;
 import gr.uom.java.xmi.UMLModelASTReader;

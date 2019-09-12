@@ -79,7 +79,9 @@ public class UMLModelASTReader {
 				processCompilationUnit(fileContents, relativePath, ast, recursionLevel);
 			}
 		};
+		log.info("went out from fileRequestor creator and now creating the ASTs;");
 		this.parser.createASTs((String[]) filesArray, null, emptyArray, fileASTRequestor, null);
+		log.info("yes! we created the ASTS!!");
 	}
 
 	private String readFileContents(String filePath) {

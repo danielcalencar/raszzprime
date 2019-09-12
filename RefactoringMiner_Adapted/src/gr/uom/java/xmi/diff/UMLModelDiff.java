@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 
 public class UMLModelDiff {
 
-	private static final Logger log = Logger.getClass(UMLModelDiff.class);
+	private static final Logger log = Logger.getLogger(UMLModelDiff.class);
 	private List<UMLClass> addedClasses;
 	private List<UMLClass> removedClasses;
 

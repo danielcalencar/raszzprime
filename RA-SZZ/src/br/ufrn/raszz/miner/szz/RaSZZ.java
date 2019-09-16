@@ -1,6 +1,7 @@
 package br.ufrn.raszz.miner.szz;
 
 import java.io.File;
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ public class RaSZZ extends Miner {
 	private static final Logger log = Logger.getLogger(RaSZZ.class);
 	private SzzDAO szzDAO;
 	private SzzRepository repository;
+	private static Console c = System.console();
 
 	//{{{ main()
 	public static void main(String[] args) throws Exception {
@@ -36,33 +38,48 @@ public class RaSZZ extends Miner {
 		String projectTokens = szz.getProperty("git_projects","/backhoe.properties");
 		String gitUrlsTokens = szz.getProperty("git_repos","/backhoe.properties");
 		String svnUrlsTokens = szz.getProperty("svn_repos","/backhoe.properties");
+		boolean useProjectProperties = Boolean.valueOf(szz.getProperty("use_project_properties","/backhoe.properties"));
 		String[] projects = projectTokens.split(",");
 		String[] gitUrls = gitUrlsTokens.split(",");
 		String[] svnUrls = svnUrlsTokens.split(",");
-		for(int i=0; i < projects.length; i++){
-			String project = projects[i];
-			String remoteUrl = null;
-			log.info("running SZZ for project: " + project);
-			RepositoryType repoType = RepositoryType.GIT;
-			SZZImplementationType szzType = SZZImplementationType.RASZZ;
-
-			switch(repoType){
-				case GIT: remoteUrl = gitUrls[i];
-					  break;
-				case SVN: remoteUrl = svnUrls[i];
-					  break;
+		RepositoryType repoType = RepositoryType.GIT;
+		SZZImplementationType szzType = SZZImplementationType.RASZZ;
+		if(!useProjectProperties){
+			/* if using the backhoe.properties, we need the for
+			 * loop because the projects are specified in a comma
+			 * separated way */
+			for(int i=0; i < projects.length; i++){
+				beforeInit(szz, useProjectProperties, projects[i], repoType, szzType, gitUrls, svnUrls, i);
 			}
-			log.info("and remoteUrl: " + remoteUrl);
-			szz.init(project, remoteUrl, repoType, szzType, false, null);
+		} else { 
+			/* we don't need the for loop if we are not using the
+			 * backhoe.properties because then we know the user
+			 * wants to run one project at a time. The project will
+			 * be asked by SZZ in the method below */
+			beforeInit(szz, useProjectProperties, null, repoType, szzType, null, null, 0);
 		}
-		//String[] projects = { "ActiveMQ", "Camel", "Derby", "Geronimo", "Hadoop Common", "HBase" }; 
-		//String[] projects = { "Geronimo", "Hadoop Common", "HBase" };
-		//String[] projects = { "Mahout", "OpenJPA", "Pig", "Tuscany" };
-		//String[] projects = { "jfreechart", "commons-lang", "commons-math"}; //svn
-		//String[] projects = { "joda-time", "closure-compiler" , "mockito" }; //git
-		//String[] projects = {"mockito"};
 	}	
 	//}}}
+	
+	//{{{ beforeInit()
+	public static void beforeInit(RaSZZ szz, Boolean useProjectProperties, String project, RepositoryType repoType, 
+			SZZImplementationType szzType, String[] gitUrls, String[] svnUrls, int index) throws Exception {
+				String remoteUrl = null;
+				if(!useProjectProperties){
+					switch(repoType){
+						case GIT: remoteUrl = gitUrls[index];
+							  break;
+						case SVN: remoteUrl = svnUrls[index];
+							  break;
+					}
+				} else {
+					project = c.readLine("ok you don't want me to use the backhoe.properties, so which project should I work on?");
+					remoteUrl = szz.getProperty(project.toUpperCase(),"/projects.properties");
+				}
+				log.info("and remoteUrl: " + remoteUrl);
+				log.info("running SZZ for project: " + project);
+				szz.init(project, remoteUrl, repoType, szzType, false, null);
+	}//}}}
 	
 	//{{{ public void init()
 	public void init(String project, String remoteUrl, RepositoryType repoType,
@@ -77,19 +94,11 @@ public class RaSZZ extends Miner {
 		String localUrl = null;
 		switch (repoType) {
 		case GIT:
-			//if (projects[0].equals("closure-compiler"))
-			//	url = "https://github.com/google/closure-compiler.git";
-			//if (projects[0].equals("mockito"))
-			//	url = "https://github.com/mockito/mockito.git";
-			//if (projects[0].equals("joda-time"))
-			//	url = "https://github.com/JodaOrg/joda-time.git";
-			//urls = gitRepos.split(","); 
 			tmpfolder += "gitfiles"+ File.separator + project; //TODO nao dar rodar mais um assim
 			localUrl = tmpfolder + ".git";
 			break;
 		case SVN:
 			tmpfolder += "svnfiles"+ File.separator;
-			//localUrl = this.getProperty("svn_url","/backhoe.properties");
                         localUrl = remoteUrl;
 			break;
 		}	
@@ -229,4 +238,5 @@ public class RaSZZ extends Miner {
 		}
 	}
 	//}}}
+	
 }

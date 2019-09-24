@@ -181,6 +181,7 @@ public class TraceBackRaSZZ extends AnnotationGraphService {
 					String currentPath) 
 					throws Exception {
 		Line prevline = null;		
+		log.info(String.format("createLinesInPreviousRev(184) - analyzed revision: %s",fixRev.getRevision()));
 		String content = prepareLineContent(linetotrace);
 		SzzFileRevision prevrev = (!isReTrace)? getPrevRev(rev,fileRevisions) : reprevrev;
 		//if the buggycode is in rev from the start

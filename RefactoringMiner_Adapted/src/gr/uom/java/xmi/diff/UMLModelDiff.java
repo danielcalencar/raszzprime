@@ -112,7 +112,7 @@ public class UMLModelDiff {
 
 	private boolean isSubclassOf(String subclass, String finalSuperclass, int recursionLevel) throws Exception {
 		recursionLevel++;
-		if(recursionLevel > 7880000){
+		if(recursionLevel > 10000){
 			throw new Exception("Too much recursion, let us avoid a StackOverflowError");
 		}
 		//log.info(String.format("recursion level: %s ", recursionLevel));
@@ -176,7 +176,7 @@ public class UMLModelDiff {
 
 	private boolean checkInheritanceRelationship(UMLType superclass, String finalSuperclass, int recursionLevel) throws Exception {
 		recursionLevel++;
-		if(recursionLevel > 7880000){
+		if(recursionLevel > 10000){
 			throw new Exception("Too much recursion, let us avoid a StackOverflowError");
 		}
 		//log.info(String.format("recursion level: %s",recursionLevel));

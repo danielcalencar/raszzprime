@@ -115,7 +115,7 @@ public class UMLModelDiff {
 		if(recursionLevel > 7880000){
 			throw new Exception("Too much recursion, let us avoid a StackOverflowError");
 		}
-		//log.info(String.format("recursion level: %s ", recursionLevel));
+		//log.debug(String.format("recursion level: %s ", recursionLevel));
 		UMLClassDiff subclassDiff = getUMLClassDiff(subclass);
 		if(subclassDiff == null) {
 			subclassDiff = getUMLClassDiff(UMLType.extractTypeObject(subclass));
@@ -751,39 +751,39 @@ public class UMLModelDiff {
 	public List<Refactoring> getRefactorings() throws Exception {
 		List<Refactoring> refactorings = new ArrayList<Refactoring>();
 		try {
-			log.info("entering getMoveClassRefactorings");
+			log.debug("entering getMoveClassRefactorings");
 			refactorings.addAll(getMoveClassRefactorings());
-			log.info("entering getRenameClassRefactorings");
+			log.debug("entering getRenameClassRefactorings");
 			refactorings.addAll(getRenameClassRefactorings());
-			log.info("entering identifyConvertAnonymousClassToTypeRefactorings");
+			log.debug("entering identifyConvertAnonymousClassToTypeRefactorings");
 			refactorings.addAll(identifyConvertAnonymousClassToTypeRefactorings());
-			log.info("entering checkForAttributeMovesBetweenCommonClasses");
+			log.debug("entering checkForAttributeMovesBetweenCommonClasses");
 			refactorings.addAll(checkForAttributeMovesBetweenCommonClasses());
-			log.info("entering identifyExtractSuperclassRefactorings");
+			log.debug("entering identifyExtractSuperclassRefactorings");
 			refactorings.addAll(identifyExtractSuperclassRefactorings());
-			log.info("entering checkForOperationMovesIncludingAddedClasses");
+			log.debug("entering checkForOperationMovesIncludingAddedClasses");
 			refactorings.addAll(checkForAttributeMovesIncludingAddedClasses());
-			log.info("entering checkForAttributeMovesIncludingRemovedClasses");
+			log.debug("entering checkForAttributeMovesIncludingRemovedClasses");
 			refactorings.addAll(checkForAttributeMovesIncludingRemovedClasses());
-			log.info("entering for(classDiff : commonClassDiffList)");
+			log.debug("entering for(classDiff : commonClassDiffList)");
 			for(UMLClassDiff classDiff : commonClassDiffList) {
 				refactorings.addAll(classDiff.getRefactorings());
 			}
-			log.info("entering checkForOperationMovesBetweenCommonClasses()");
+			log.debug("entering checkForOperationMovesBetweenCommonClasses()");
 			checkForOperationMovesBetweenCommonClasses();
-			log.info("entering checkForExtractedAndMovedOperations()");
+			log.debug("entering checkForExtractedAndMovedOperations()");
 			checkForExtractedAndMovedOperations();
-			log.info("entering checkForOperationMovesIncludingAddedClasses()");
+			log.debug("entering checkForOperationMovesIncludingAddedClasses()");
 			checkForOperationMovesIncludingAddedClasses();
-			log.info("entering checkForOperationMovesIncludingRemovedClasses()");
+			log.debug("entering checkForOperationMovesIncludingRemovedClasses()");
 			checkForOperationMovesIncludingRemovedClasses();
-			log.info("adding everything");
+			log.debug("adding everything");
 			refactorings.addAll(this.refactorings);
-			log.info("returning refactorings");
+			log.debug("returning refactorings");
 			return refactorings;
 		} catch (Exception e) {
 			if(e.getMessage().equals("Too much recursion, let us avoid a StackOverflowError")){
-				log.info("too much recursion here... To avoid a StackOverflow we are returning the refactoring found so far.");
+				log.debug("too much recursion here... To avoid a StackOverflow we are returning the refactoring found so far.");
 				refactorings.addAll(this.refactorings);
 				return refactorings;
 			} else {

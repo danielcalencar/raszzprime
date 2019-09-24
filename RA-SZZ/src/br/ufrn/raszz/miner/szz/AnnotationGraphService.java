@@ -70,6 +70,11 @@ public abstract class AnnotationGraphService implements Runnable {
 		log.info(linkedRevs.size() + " linked revisions found...");
 		long count = 1;
 		for (String i : linkedRevs) {
+			//specific revisions to ignore here.
+			if(i.equals("dece1ccfeccfe6e331829e88d1d12c991f2a3d21")){
+				log.info(String.format("ignoring revision %s as it leads to crazy memory errors",i));
+				continue;
+			}
 
 			if (!isTest) {
 				//in case we needed to stop the process

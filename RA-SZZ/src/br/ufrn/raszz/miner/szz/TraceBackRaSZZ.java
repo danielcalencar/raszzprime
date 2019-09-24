@@ -147,7 +147,7 @@ public class TraceBackRaSZZ extends AnnotationGraphService {
 										linetotrace.getAdjustmentIndex(),
 										linetotrace.getContent());
 							if (isrefac) {
-								log.info(" Detected REFACTORING in line " + 
+								log.debug(" Detected REFACTORING in line " + 
 										linetotrace.getPreviousNumber() + 
 										" of the file " + beforeRev.getPath() + " (" + fixRev.getRevision() + ")");
 								break;
@@ -181,7 +181,7 @@ public class TraceBackRaSZZ extends AnnotationGraphService {
 					String currentPath) 
 					throws Exception {
 		Line prevline = null;		
-		log.info(String.format("createLinesInPreviousRev(184) - analyzed revision: %s",fixRev.getRevision()));
+		//log.info(String.format("createLinesInPreviousRev(184) - analyzed revision: %s",fixRev.getRevision()));
 		String content = prepareLineContent(linetotrace);
 		SzzFileRevision prevrev = (!isReTrace)? getPrevRev(rev,fileRevisions) : reprevrev;
 		//if the buggycode is in rev from the start
@@ -191,7 +191,7 @@ public class TraceBackRaSZZ extends AnnotationGraphService {
 			
 			//#DEBUG
 			if (debugContent != null && linetotrace.getContent().equals(debugContent)) 
-				log.info("DEBUG POINT IN: " + prevrev.getRevision());
+				log.debug("DEBUG POINT IN: " + prevrev.getRevision());
 						
 			//REFACTORING IN FIX-INDUNCING CHANGES 				
 			//verifica se a refatoração nao ta salva

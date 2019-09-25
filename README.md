@@ -26,6 +26,7 @@ Currently, RA-SZZ uses Apache Ant as the building tool for its core components.
 In order to run RA-SZZ the components should be build in the following order (assuming you are
 at the raszzprime/ directory).
 
+```
 $ cd connector-core/
 $ ant compile
 
@@ -40,12 +41,15 @@ $ ant compile
 
 $ cd ../RA-SZZ/
 $ ant build
+```
 
 ## Running RA-SZZ
 
 Use the following command to run the RA-SZZ algorithm:
 
+```
 java -cp raszzprime/core-connector/build/classes:raszzprime/core-connector/libs/*:raszzprime/DiffJ/build/classes:raszzprime/DiffJ/libs/*:raszzprime/RefactoringMiner\_Adapted/build/classes:raszzprime/RefactoringMiner\_Adapted/libs/*:raszzprime/refdiff-core/build/classes:raszzprime/refdiff-core/libs/*:raszzprime/RA-SZZ/libs/*:raszzprime/RA-SZZ/build/classes br.ufrn.raszz.miner.szz.RaSZZ
+```
 
 Please, note that you need to change the ':' to ';' on Windows systems.
 

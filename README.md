@@ -69,10 +69,14 @@ select distinct(projectname) from linkedissuessvn order by projectname;
 
 ## Configuring the Database
 
-This repository comes with the 'bkp_raszz_structure.sql', which is a Postgres
-backup file. Once you have installed the Postgres database in your computer,
-you can load the database backup via the pGAdmin tool that comes along with the
-installation.
+This RA-SZZ implementation relies on a database to function. Please, download
+the database on the link below.
+
+- [bkp_raszz_structure.backup]('https://mylink.com') 
+
+The link should provide you a Postgres backup file. Once you have installed the
+Postgres database in your computer, you can load the database backup via the
+pGAdmin tool that comes along with the installation.
 
 RA-SZZ will read the bug-fixing hashes per analyzed project from the
 'linkedissuessvn' table. For each commit hash that RA-SZZ processes, it will

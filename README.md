@@ -15,10 +15,10 @@ This project uses other projects as dependencies:
 
 RA-SZZ is composed of several modules, which are listed below:
 
-1 - connector-core 
-2 - DiffJ
-3 - Refactoring\_Miner\_Adapted
-4 - refdiff-core
+- connector-core 
+- DiffJ
+- Refactoring\_Miner\_Adapted
+- refdiff-core
 
 ## Building RA-SZZ
 
@@ -33,7 +33,7 @@ $ ant compile
 $ cd ../DiffJ/
 $ ant compile
 
-$ cd ../Refactoring\_Miner\_Adapted
+$ cd ../Refactoring_Miner_Adapted
 $ ant compile
 
 $ cd ../refdiff-core/
@@ -48,7 +48,7 @@ $ ant build
 Use the following command to run the RA-SZZ algorithm:
 
 ```
-java -cp raszzprime/core-connector/build/classes:raszzprime/core-connector/libs/*:raszzprime/DiffJ/build/classes:raszzprime/DiffJ/libs/*:raszzprime/RefactoringMiner\_Adapted/build/classes:raszzprime/RefactoringMiner\_Adapted/libs/*:raszzprime/refdiff-core/build/classes:raszzprime/refdiff-core/libs/*:raszzprime/RA-SZZ/libs/*:raszzprime/RA-SZZ/build/classes br.ufrn.raszz.miner.szz.RaSZZ
+java -cp raszzprime/core-connector/build/classes:raszzprime/core-connector/libs/*:raszzprime/DiffJ/build/classes:raszzprime/DiffJ/libs/*:raszzprime/RefactoringMiner_Adapted/build/classes:raszzprime/RefactoringMiner_Adapted/libs/*:raszzprime/refdiff-core/build/classes:raszzprime/refdiff-core/libs/*:raszzprime/RA-SZZ/libs/*:raszzprime/RA-SZZ/build/classes br.ufrn.raszz.miner.szz.RaSZZ
 ```
 
 Please, note that you need to change the ':' to ';' on Windows systems.

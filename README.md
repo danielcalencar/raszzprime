@@ -14,12 +14,13 @@ This project uses other projects as dependencies:
 ---
 # Overview
 
-RA-SZZ is composed of several modules, which are listed below:
+RA-SZZ is composed of five modules (or subprojects), which are listed below:
 
 - connector-core 
 - DiffJ
 - Refactoring\_Miner\_Adapted
 - refdiff-core
+- RA-SZZ
 
 ## Building RA-SZZ
 

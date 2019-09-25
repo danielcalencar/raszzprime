@@ -83,6 +83,25 @@ intended to reset the results obtained by RA-SZZ to a given project, the data
 within the szz_project_lastrevisionprocessed must be deleted.
 
 
+### hibernate.cfg.xml
+
+RA-SZZ uses the Hibernate framework to interact with its database. Therefore you will
+need to configure the hibernate.cfg.xml file that is located within the RA-SZZ/src/ directory. More specifically
+the properties below should be specified.
+
+```
+<!-- Database connection settings -->
+<property name="connection.driver_class">org.postgresql.Driver</property>
+<property name="connection.url">jdbc:postgresql://localhost:5432/mydatabase</property>
+<property name="connection.username">postgres</property>
+<property name="connection.password">mypassword</property> 
+```
+
+
+
+
+
+
 
 
 

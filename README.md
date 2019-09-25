@@ -86,7 +86,7 @@ within the szz_project_lastrevisionprocessed must be deleted.
 ### hibernate.cfg.xml
 
 RA-SZZ uses the Hibernate framework to interact with its database. Therefore you will
-need to configure the hibernate.cfg.xml file that is located within the RA-SZZ/src/ directory. More specifically
+need to configure the hibernate.cfg.xml file that is located within the RA-SZZ/src/ directory. More specifically,
 the properties below should be specified.
 
 ```

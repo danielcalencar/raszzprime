@@ -72,7 +72,7 @@ select distinct(projectname) from linkedissuessvn order by projectname;
 This RA-SZZ implementation relies on a database to function. Please, download
 the database on the link below.
 
-- [bkp_raszz_structure.backup]('https://mylink.com') 
+- [bkp\_raszz\_structure.backup]('https://1drv.ms/u/s!AjwwQo-ZLNfXgdBngASHigtxdb9EiQ?e=adIc9Z') 
 
 The link should provide you a Postgres backup file. Once you have installed the
 Postgres database in your computer, you can load the database backup via the

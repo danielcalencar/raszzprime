@@ -1,4 +1,5 @@
-## RA-SZZ ##
+# RA-SZZ 
+---
 **RA-SZZ** (*Refactoring Aware - SZZ*) is an improved and open source
 implementation of SZZ algorithm initially proposed by Sliwerski, Zimmermann,
 and Zeller (2005). RA-SZZ is designed to find bug introducing changes starting

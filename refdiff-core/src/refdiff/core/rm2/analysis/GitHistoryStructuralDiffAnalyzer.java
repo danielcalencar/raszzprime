@@ -110,6 +110,10 @@ public class GitHistoryStructuralDiffAnalyzer {
 	
 	protected void detectRefactorings(GitService gitService, Repository repository, final StructuralDiffHandler handler, File projectFolder, RevCommit currentCommit) throws Exception {
 	    String commitId = currentCommit.getId().getName();
+	    if(commitId.equals("806ce6a360c10773207b508409152df0d5d4eb8a")){
+		    throw new Exception("let's avoid this revision");
+	    }
+
 		List<String> filesBefore = new ArrayList<String>();
 		List<String> filesCurrent = new ArrayList<String>();
 		Map<String, String> renamedFilesHint = new HashMap<String, String>();

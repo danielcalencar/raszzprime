@@ -112,6 +112,10 @@ public class GitServiceImpl<T> implements RMService<T> {
 	public void checkout(T repo, String commitId) throws Exception {
 		Repository repository = (Repository) repo;
 	    logger.info("Checking out {} {} ...", repository.getDirectory().getParent().toString(), commitId);
+	    //some revisions should be ignored as they lead to crazy memory errors:
+	    if(commitId.equals("806ce6a360c10773207b508409152df0d5d4eb8a")){
+		    throw new Exception("let's avoid this revision");
+	    }
 	    try (Git git = new Git(repository)) {
 	        CheckoutCommand checkout = git.checkout().setName(commitId);
 	        checkout.call();

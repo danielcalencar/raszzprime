@@ -91,11 +91,8 @@ public class GitHistoryRefactoringMinerImpl<T> extends HistoryRefactoringMinerIm
 			UMLModel currentUMLModel = createModel(projectFolder, filesCurrent);
 			
 			// Diff between currentModel e parentModel
-			log.info("entering diff");
 			refactoringsAtRevision = parentUMLModel.diff(currentUMLModel, renamedFilesHint).getRefactorings();
-			log.info("out from method diff");
 			refactoringsAtRevision = filter(refactoringsAtRevision);
-			log.info("out from filter");
 			
 		} else {
 			//logger.info(String.format("Ignored revision %s with no changes in java files", commitId));
@@ -104,7 +101,6 @@ public class GitHistoryRefactoringMinerImpl<T> extends HistoryRefactoringMinerIm
 		
 		handler.handle(commitId, refactoringsAtRevision);
 		handler.handle(currentCommit, refactoringsAtRevision);
-		log.info("out from handlers");
 
 		System.out.println(refactoringsAtRevision.toString());
 		return refactoringsAtRevision;

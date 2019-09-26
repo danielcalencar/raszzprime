@@ -48,7 +48,7 @@ $ ant compile
 $ cd ../RA-SZZ
 $ ant clean
 $ ant build
-``
+```
 
 ## Running RA-SZZ
 
@@ -102,3 +102,4 @@ the properties below should be specified.
 <property name="connection.username">postgres</property>
 <property name="connection.password">mypassword</property> 
 ```
+

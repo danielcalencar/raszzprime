@@ -111,53 +111,35 @@ public class UMLModel {
 	}
 
 	public UMLModelDiff diff(UMLModel umlModel, Map<String, String> renamedFileHints) {
-		UMLModelDiff modelDiff = new UMLModelDiff();
 
-		log.info("entering reportRemovedClass");
+		UMLModelDiff modelDiff = new UMLModelDiff();
 		for(UMLClass umlClass : classList) {
 			if(!umlModel.classList.contains(umlClass))
 				modelDiff.reportRemovedClass(umlClass);
 		}
-		log.info("out from reportRemovedClass");
-		
-		log.info("entering reportAddedClass");
 		for(UMLClass umlClass : umlModel.classList) {
 			if(!this.classList.contains(umlClass))
 				modelDiff.reportAddedClass(umlClass);
 		}
-		log.info("out from reportAddedClass");
-		log.info("entering checkForMovedClasses");
 		modelDiff.checkForMovedClasses(renamedFileHints, umlModel.projectRoot);
-		log.info("out from checkForMovedClasses");
-		log.info("entering checkForRenamedClasses");
 		modelDiff.checkForRenamedClasses(renamedFileHints);
-		log.info("out from checkForRenamedClasses");
-		log.info("entering reportRemovedGeneralization");
 		for(UMLGeneralization umlGeneralization : generalizationList) {
 			if(!umlModel.generalizationList.contains(umlGeneralization))
 				modelDiff.reportRemovedGeneralization(umlGeneralization);
 		}
-		log.info("out from reportRemovedGeneralization");
-		log.info("entering reportAddedGeneralization");
 		for(UMLGeneralization umlGeneralization : umlModel.generalizationList) {
 			if(!this.generalizationList.contains(umlGeneralization))
 				modelDiff.reportAddedGeneralization(umlGeneralization);
 		}
-		log.info("out from reportAddedGeneralization");
-		log.info("entering checkForGeneralizationChanges");
 		modelDiff.checkForGeneralizationChanges();
 		for(UMLRealization umlRealization : realizationList) {
 			if(!umlModel.realizationList.contains(umlRealization))
 				modelDiff.reportRemovedRealization(umlRealization);
 		}
-		log.info("out from checkForGeneralizationChanges");
-		log.info("entering reportAddedRealization");
 		for(UMLRealization umlRealization : umlModel.realizationList) {
 			if(!this.realizationList.contains(umlRealization))
 				modelDiff.reportAddedRealization(umlRealization);
 		}
-		log.info("out from reportAddedRealization");
-		log.info("entering checkForRealizationChanges");
 		modelDiff.checkForRealizationChanges();
 		for(UMLClass umlClass : classList) {
 			if(umlModel.classList.contains(umlClass)) {
@@ -169,7 +151,6 @@ public class UMLModel {
 				}
 			}
 		}
-		log.info("out from checkForRealizationChanges");
 		return modelDiff;
 	}
 }

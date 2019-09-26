@@ -33,7 +33,6 @@ public class GitServiceImpl<T> implements RMService<T> {
 
 	private static final String REMOTE_REFS_PREFIX = "refs/remotes/origin/";
 	Logger logger = LoggerFactory.getLogger(GitServiceImpl.class);
-
 	DefaultCommitsFilter commitsFilter = new DefaultCommitsFilter();
 	
 	@Override
@@ -47,9 +46,6 @@ public class GitServiceImpl<T> implements RMService<T> {
 					.readEnvironment()
 					.findGitDir()
 					.build();
-			
-			//logger.info("Project {} is already cloned, current branch is {}", cloneUrl, repository.getBranch());
-			
 		} else {
 			logger.info("Cloning {} ...", cloneUrl);
 			Git git = Git.cloneRepository()
@@ -58,36 +54,7 @@ public class GitServiceImpl<T> implements RMService<T> {
 					.setCloneAllBranches(true)
 					.call();
 			repository = git.getRepository();
-			//logger.info("Done cloning {}, current branch is {}", cloneUrl, repository.getBranch());
 		}
-
-//		if (branch != null && !repository.getBranch().equals(branch)) {
-//			Git git = new Git(repository);
-//			
-//			String localBranch = "refs/heads/" + branch;
-//			List<Ref> refs = git.branchList().call();
-//			boolean branchExists = false;
-//			for (Ref ref : refs) {
-//				if (ref.getName().equals(localBranch)) {
-//					branchExists = true;
-//				}
-//			}
-//			
-//			if (branchExists) {
-//				git.checkout()
-//					.setName(branch)
-//					.call();
-//			} else {
-//				git.checkout()
-//					.setCreateBranch(true)
-//					.setName(branch)
-//					.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK)
-//					.setStartPoint("origin/" + branch)
-//					.call();
-//			}
-//			
-//			logger.info("Project {} switched to {}", cloneUrl, repository.getBranch());
-//		}
 		return repository;
 	}
 
@@ -112,27 +79,11 @@ public class GitServiceImpl<T> implements RMService<T> {
 	public void checkout(T repo, String commitId) throws Exception {
 		Repository repository = (Repository) repo;
 	    logger.info("Checking out {} {} ...", repository.getDirectory().getParent().toString(), commitId);
-	    //some revisions should be ignored as they lead to crazy memory errors:
-	    if(commitId.equals("806ce6a360c10773207b508409152df0d5d4eb8a")){
-		    throw new Exception("let's avoid this revision");
-	    }
+	    //TODO://some revisions should be ignored as they lead to crazy memory errors:
 	    try (Git git = new Git(repository)) {
 	        CheckoutCommand checkout = git.checkout().setName(commitId);
 	        checkout.call();
 	    }
-//		File workingDir = repository.getDirectory().getParentFile();
-//		ExternalProcess.execute(workingDir, "git", "checkout", commitId);
-	    /*
-	    String commitId = repo.log().call().iterator().next().getId().getName();
-	    DirCache cache = repository.lockDirCache();
-	    try {
-	        DirCacheCheckout checkout = new DirCacheCheckout(repository, null, cache, new RevWalk(repository).parseCommit(repository.resolve(commitId)).getTree());
-	        checkout.checkout();
-	    } finally {
-	        cache.unlock();
-	    }*/
-	    
-	    
 	}
 
 	public void checkout2(Repository repository, String commitId) throws Exception {

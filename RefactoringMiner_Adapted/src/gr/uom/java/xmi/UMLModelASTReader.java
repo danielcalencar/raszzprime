@@ -1,5 +1,6 @@
 package gr.uom.java.xmi;
 
+//{{{ imports statements
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -44,12 +45,11 @@ import org.refactoringminer.util.AstUtils;
 
 import gr.uom.java.xmi.decomposition.OperationBody;
 import org.apache.log4j.Logger;
-
+//}}}
 
 public class UMLModelASTReader {
 	public static final String systemFileSeparator = Matcher.quoteReplacement(File.separator);
 	private static final Logger log = Logger.getLogger(UMLModelASTReader.class);
-	
 	private UMLModel umlModel;
 	private String projectRoot;
 	private ASTParser parser;
@@ -59,7 +59,6 @@ public class UMLModelASTReader {
 	}
 
 	public UMLModelASTReader(File rootFolder, ASTParser parser, List<String> javaFiles) {
-		log.debug("entering the UMLModelASTReader()");
 		this.umlModel = new UMLModel(rootFolder.getPath());
 		this.projectRoot = rootFolder.getPath();
 		this.parser = parser;
@@ -79,9 +78,7 @@ public class UMLModelASTReader {
 				processCompilationUnit(fileContents, relativePath, ast, recursionLevel);
 			}
 		};
-		log.debug("went out from fileRequestor creator and now creating the ASTs;");
 		this.parser.createASTs((String[]) filesArray, null, emptyArray, fileASTRequestor, null);
-		log.debug("yes! we created the ASTS!!");
 	}
 
 	private String readFileContents(String filePath) {

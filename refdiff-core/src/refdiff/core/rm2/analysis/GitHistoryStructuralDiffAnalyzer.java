@@ -103,51 +103,48 @@ public class GitHistoryStructuralDiffAnalyzer {
 			walk.parseCommit(commit.getParent(0));
 			this.detectRefactorings(gitService, repository, handler, projectFolder, commit);
 		} catch (Exception e) {
-		    logger.warn(String.format("Ignored revision %s due to error", commitId), e);
-		    handler.handleException(commitId, e);
-        }
+			logger.warn(String.format("Ignored revision %s due to error", commitId), e);
+			handler.handleException(commitId, e);
+		}
 	}
 	
-	protected void detectRefactorings(GitService gitService, Repository repository, final StructuralDiffHandler handler, File projectFolder, RevCommit currentCommit) throws Exception {
-	    String commitId = currentCommit.getId().getName();
-	    if(commitId.equals("806ce6a360c10773207b508409152df0d5d4eb8a")){
-		    throw new Exception("let's avoid this revision");
-	    }
+	protected void detectRefactorings(GitService gitService, Repository
+			repository, final StructuralDiffHandler handler, File
+			projectFolder, RevCommit currentCommit) throws Exception {
 
+		String commitId = currentCommit.getId().getName();
 		List<String> filesBefore = new ArrayList<String>();
 		List<String> filesCurrent = new ArrayList<String>();
 		Map<String, String> renamedFilesHint = new HashMap<String, String>();
 		gitService.fileTreeDiff(repository, currentCommit, filesBefore, filesCurrent, renamedFilesHint, false);
-		// If no java files changed, there is no refactoring. Also, if there are
-		// only ADD's or only REMOVE's there is no refactoring
-		
+		/* If no java files changed, there is no refactoring. Also, if there are
+		   only ADD's or only REMOVE's there is no refactoring */
 		SDModelBuilder builder = new SDModelBuilder(config);
 		if (filesBefore.isEmpty() || filesCurrent.isEmpty()) {
-		    return;
+			return;
 		}
-			// Checkout and build model for current commit
-	    File folderAfter = new File(projectFolder.getParentFile(), "v1/" + projectFolder.getName() + "-" + commitId.substring(0, 7));
-	    if (folderAfter.exists()) {
-	        logger.info(String.format("Analyzing code after (%s) ...", commitId) + " " + new Date());
-	        builder.analyzeAfter(folderAfter, filesCurrent);
-	    } else {
-	        gitService.checkout(repository, commitId);
-	        logger.info(String.format("Analyzing code after (%s) ...", commitId) + " " + new Date());
-	        builder.analyzeAfter(projectFolder, filesCurrent);
-	    }
-	
-	    String parentCommit = currentCommit.getParent(0).getName();
+		// Checkout and build model for current commit
+		File folderAfter = new File(projectFolder.getParentFile(), "v1/" + projectFolder.getName() + "-" + commitId.substring(0, 7));
+		if (folderAfter.exists()) {
+			logger.info(String.format("Analyzing code after (%s) ...", commitId) + " " + new Date());
+			builder.analyzeAfter(folderAfter, filesCurrent);
+		} else {
+			gitService.checkout(repository, commitId);
+			logger.info(String.format("Analyzing code after (%s) ...", commitId) + " " + new Date());
+			builder.analyzeAfter(projectFolder, filesCurrent);
+		}
+		String parentCommit = currentCommit.getParent(0).getName();
 		File folderBefore = new File(projectFolder.getParentFile(), "v0/" + projectFolder.getName() + "-" + commitId.substring(0, 7));
 		if (folderBefore.exists()) {
-		    logger.info(String.format("Analyzing code before (%s) ...", parentCommit)+ " " + new Date());
-            builder.analyzeBefore(projectFolder, filesBefore);
+			logger.info(String.format("Analyzing code before (%s) ...", parentCommit)+ " " + new Date());
+			builder.analyzeBefore(projectFolder, filesBefore);
 		} else {
-		    // Checkout and build model for parent commit
-		    gitService.checkout(repository, parentCommit);
-		    logger.info(String.format("Analyzing code before (%s) ...", parentCommit)+ " " + new Date());
-		    builder.analyzeBefore(projectFolder, filesBefore);
+			// Checkout and build model for parent commit
+			gitService.checkout(repository, parentCommit);
+			logger.info(String.format("Analyzing code before (%s) ...", parentCommit)+ " " + new Date());
+			builder.analyzeBefore(projectFolder, filesBefore);
 		}
-//		}
+		//		}
 		final SDModel model = builder.buildModel();
 		handler.gitHandle(currentCommit, model);
 	}

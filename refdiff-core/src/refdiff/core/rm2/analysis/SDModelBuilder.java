@@ -1,5 +1,6 @@
 package refdiff.core.rm2.analysis;
 
+//{{{ import statements
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -35,58 +36,68 @@ import refdiff.core.rm2.model.SDPackage;
 import refdiff.core.rm2.model.SDType;
 import refdiff.core.rm2.model.SourceRepresentation;
 
+import org.apache.log4j.Logger;
+//}}} import statements
+
 public class SDModelBuilder {
     
-    private final RefDiffConfig config;
-    private final SourceRepresentationBuilder srbForTypes;
-    private final SourceRepresentationBuilder srbForMethods;
-    private final SourceRepresentationBuilder srbForAttributes;
-
-    public SDModelBuilder(RefDiffConfig config) {
-        this.config = config;
-        this.srbForTypes = config.getCodeSimilarityStrategy().createSourceRepresentationBuilderForTypes();
-        this.srbForMethods = config.getCodeSimilarityStrategy().createSourceRepresentationBuilderForMethods();
-        this.srbForAttributes = config.getCodeSimilarityStrategy().createSourceRepresentationBuilderForAttributes();
-    }
-
-    private SDModel model = new SDModel();
-    
+	//{{{ instance variables
+	private int problemscount = 1;
+	private final String clazz = "SDModelBuilder";
+	private static final Logger log = Logger.getLogger(SDModelBuilder.class);
+	private final RefDiffConfig config;
+	private final SourceRepresentationBuilder srbForTypes;
+	private final SourceRepresentationBuilder srbForMethods;
+	private final SourceRepresentationBuilder srbForAttributes;
+	private SDModel model = new SDModel();
 	private static final String systemFileSeparator = Matcher.quoteReplacement(File.separator);
-	
 	private Map<SDEntity, List<String>> postProcessReferences;
 	private Map<SDEntity, List<String[]>> postProcessReferencesLine;
 	private Map<SDType, List<String>> postProcessSupertypes;
 	private Map<String, List<SourceRepresentation>> postProcessClientCode;
+	//}}}
 
-	private void postProcessReferences(final SDModel.Snapshot model, Map<? extends SDEntity, List<String>> referencesMap) {
-	    for (Map.Entry<? extends SDEntity, List<String>> entry : referencesMap.entrySet()) {
-	        final SDEntity entity = entry.getKey();
-	        List<String> references = entry.getValue();
-	        for (String referencedKey : references) {
-	            SDEntity referenced = model.findByName(SDEntity.class, referencedKey);
-	            if (referenced != null) {
-	                entity.addReference(referenced);
-	            }
-	        }
-	    }
+	//{{{ (Constructor) SDModelBuilder
+	public SDModelBuilder(RefDiffConfig config) {
+		this.config = config;
+		this.srbForTypes = config.getCodeSimilarityStrategy().createSourceRepresentationBuilderForTypes();
+		this.srbForMethods = config.getCodeSimilarityStrategy().createSourceRepresentationBuilderForMethods();
+		this.srbForAttributes = config.getCodeSimilarityStrategy().createSourceRepresentationBuilderForAttributes();
 	}
+	//}}}
+
+	//{{{ postProcessReferences()
+	private void postProcessReferences(final SDModel.Snapshot model, Map<? extends SDEntity, List<String>> referencesMap) {
+		for (Map.Entry<? extends SDEntity, List<String>> entry : referencesMap.entrySet()) {
+			final SDEntity entity = entry.getKey();
+			List<String> references = entry.getValue();
+			for (String referencedKey : references) {
+				SDEntity referenced = model.findByName(SDEntity.class, referencedKey);
+				if (referenced != null) {
+					entity.addReference(referenced);
+				}
+			}
+		}
+	}
+	//}}}
+
 	private void postProcessReferencesLine(final SDModel.Snapshot model, Map<? extends SDEntity, List<String[]>> referencesMap) {
-	    for (Map.Entry<? extends SDEntity, List<String[]>> entry : referencesMap.entrySet()) {
-	        final SDEntity entity = entry.getKey();
-	        List<String[]> references = entry.getValue();
-	        //List<String> references = aux[0];
-	        for (String[] referencedKey : references) {
-	            SDEntity referenced = model.findByName(SDEntity.class, referencedKey[0]);
-	            if (referenced != null) {
-	            	referenced.setCallerline(Long.parseLong(referencedKey[1]));	            	
-	            	/*if (entity.simpleName().equals("getKernelNames()")) {
-                    	System.out.println("DEBUG");
-                    	System.out.println(entity.simpleName() + " - " + referencedKey[0] + "(" + referencedKey[1] + ")");
-                    }*/            	
-	                entity.addReference(referenced);
-	            }
-	        }
-	    }
+		for (Map.Entry<? extends SDEntity, List<String[]>> entry : referencesMap.entrySet()) {
+			final SDEntity entity = entry.getKey();
+			List<String[]> references = entry.getValue();
+			//List<String> references = aux[0];
+			for (String[] referencedKey : references) {
+				SDEntity referenced = model.findByName(SDEntity.class, referencedKey[0]);
+				if (referenced != null) {
+					referenced.setCallerline(Long.parseLong(referencedKey[1]));	            	
+					/*if (entity.simpleName().equals("getKernelNames()")) {
+					  System.out.println("DEBUG");
+					  System.out.println(entity.simpleName() + " - " + referencedKey[0] + "(" + referencedKey[1] + ")");
+					  }*/            	
+					entity.addReference(referenced);
+				}
+			}
+		}
 	}
 	private void postProcessSupertypes(final SDModel.Snapshot model) {
 		for (Map.Entry<SDType, List<String>> entry : postProcessSupertypes.entrySet()) {
@@ -101,58 +112,58 @@ public class SDModelBuilder {
 		}
 	}
 	private void postProcessClientCode(final SDModel.Snapshot model) {
-	    for (Map.Entry<String, List<SourceRepresentation>> entry : postProcessClientCode.entrySet()) {
-	        final String entityId = entry.getKey();
-	        SDAttribute entity = model.findByName(SDAttribute.class, entityId);
-	        if (entity != null) {
-	            List<SourceRepresentation> sourceSnippets = entry.getValue();
-	            if (sourceSnippets.size() > 0) {
-	                entity.setClientCode(srbForAttributes.buildSourceRepresentation(entity, sourceSnippets));
-	            }
-	        }
-	    }
+		for (Map.Entry<String, List<SourceRepresentation>> entry : postProcessClientCode.entrySet()) {
+			final String entityId = entry.getKey();
+			SDAttribute entity = model.findByName(SDAttribute.class, entityId);
+			if (entity != null) {
+				List<SourceRepresentation> sourceSnippets = entry.getValue();
+				if (sourceSnippets.size() > 0) {
+					entity.setClientCode(srbForAttributes.buildSourceRepresentation(entity, sourceSnippets));
+				}
+			}
+		}
 	}
 
 	public void analyzeAfter(File rootFolder, List<String> javaFiles) {
-	    this.analyze(rootFolder, javaFiles, model.after());
+		this.analyze(rootFolder, javaFiles, model.after());
 	}
 
 	public void analyzeBefore(File rootFolder, List<String> javaFiles) {
-	    this.analyze(rootFolder, javaFiles, model.before());
-	    srbForTypes.onComplete();
-	    srbForMethods.onComplete();
-	    srbForAttributes.onComplete();
+		this.analyze(rootFolder, javaFiles, model.before());
+		srbForTypes.onComplete();
+		srbForMethods.onComplete();
+		srbForAttributes.onComplete();
 	}
 
 	private void analyze(File rootFolder, List<String> javaFiles, final SDModel.Snapshot model) {
-	    postProcessReferences = new HashMap<SDEntity, List<String>>();
-	    postProcessReferencesLine = new HashMap<SDEntity, List<String[]>>();
+		postProcessReferences = new HashMap<SDEntity, List<String>>();
+		postProcessReferencesLine = new HashMap<SDEntity, List<String[]>>();
 		postProcessSupertypes = new HashMap<SDType, List<String>>();
 		postProcessClientCode = new HashMap<String, List<SourceRepresentation>>();
 		final String projectRoot = rootFolder.getPath();
 		final String[] emptyArray = new String[0];
-		
 		String[] filesArray = new String[javaFiles.size()];
 		for (int i = 0; i < filesArray.length; i++) {
 			//If the file starts with / then remove this char to avoid double //
 			if(javaFiles.get(i).startsWith("/"))
 				javaFiles.set(i, javaFiles.get(i).substring(1));
-			
+
 			filesArray[i] = rootFolder + File.separator + javaFiles.get(i).replaceAll("/", systemFileSeparator);
 		}
 		final String[] sourceFolders = this.inferSourceFolders(filesArray);
-		
 		final ASTParser parser = buildAstParser(sourceFolders);
-
 		FileASTRequestor fileASTRequestor = new FileASTRequestor() { 
 			@Override
 			public void acceptAST(String sourceFilePath, CompilationUnit ast) {
 				String relativePath = sourceFilePath.substring(projectRoot.length() + 1).replaceAll(systemFileSeparator, "/");
 				IProblem[] problems = ast.getProblems();
 				if (problems.length > 0) {
-					System.out.println("problems");
+					log.info(String.format("%s(160) - problems",clazz));
+					problemscount++;
+					if(problemscount > 10000){
+						throw new RuntimeException("let's skip this to avoid java heap space problems");
+					}
 				}
-			//
 				try {
 					char[] charArray = Util.getFileCharContent(new File(sourceFilePath), null);
 					processCompilationUnit(relativePath, charArray, ast, model);
@@ -160,31 +171,15 @@ public class SDModelBuilder {
 					throw new RuntimeException(e);
 				}
 				catch (DuplicateEntityException e) {
-					System.out.println("problems!");
-					System.out.println(e.getMessage());
-		        }
+					log.error(e.getMessage());
+				}
 			}
 		};
-		
-		//File file = new File(filesArray[0]);
-		//IWorkspaceRoot WorkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		//JavaModel = JavaCore.create(WorkspaceRoot);
-		//IFile[] files = WorkspaceRoot.findFilesForLocationURI(file.toURI(), IResource.FILE);
-		//IJavaProject project;
-		//JavaCore.crea
-		//parser.setProject(JavaCore.create(files[0].getProject()));
-		
-		System.out.println("Starting create AST method in " + new Date());
+		log.info("Starting create AST method in " + new Date());
 		parser.createASTs((String[]) filesArray, null, emptyArray, fileASTRequestor, null);
-		System.out.println("Finished create AST method in " + new Date());
-		
-		/*
-		postProcessReferences(model, postProcessReferences);
-		postProcessReferences = null;
-		/*/
+		log.info("Finished create AST method in " + new Date());
 		postProcessReferencesLine(model, postProcessReferencesLine);
 		postProcessReferencesLine = null;
-		
 		postProcessSupertypes(model);
 		postProcessSupertypes = null;
 		postProcessClientCode(model);
@@ -200,26 +195,18 @@ public class SDModelBuilder {
 		parser.setResolveBindings(true);
 		parser.setBindingsRecovery(true);
 		parser.setEnvironment(new String[0], sourceFolders, null, true);
-		//parser.setEnvironment(new String[0], new String[]{"tmp\\refactoring-toy-example\\src"}, null, false);
 		return parser;
 	}
-	
+
 	private static ASTParser buildAstParserTest(String[] sourceFolders) {
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
-		
 		String[] encodings = { "UTF-8", "UTF-8" };
 		Map options = JavaCore.getOptions();
 		JavaCore.setComplianceOptions(JavaCore.VERSION_1_8, options);
-		
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setCompilerOptions(options);
 		parser.setResolveBindings(true);
 		parser.setBindingsRecovery(true);
-		
-		
-		//String[] testePath = new String[]{File.separator+"media"+File.separator+"eliezio"+File.separator+"files"+File.separator+"Workspace-Doc"+File.separator+"tmp"+File.separator+"svnfiles"+File.separator+"v1\\94"+File.separator+"trunk"+File.separator+"source"+File.separator+"org"+File.separator+"jfree"+File.separator+"chart"+File.separator+"axis"+File.separator};
-		//parser.setEnvironment(new String[0], testePath, null, true);
-		
 		parser.setEnvironment(new String[0], sourceFolders, null, true);
 		return parser;
 	}
@@ -233,29 +220,32 @@ public class SDModelBuilder {
 		String packagePath = packageName.replace('.', '/');
 		String sourceFolder = "/";
 		if (sourceFilePath.contains(packagePath)) {
-		  sourceFolder = sourceFilePath.substring(0, sourceFilePath.indexOf(packagePath));
+			sourceFolder = sourceFilePath.substring(0, sourceFilePath.indexOf(packagePath));
 		}
 		SDPackage sdPackage = model.getOrCreatePackage(packageName, sourceFolder);
-		BindingsRecoveryAstVisitor visitor = new BindingsRecoveryAstVisitor(compilationUnit, model, sourceFilePath, fileContent, sdPackage, postProcessReferences, postProcessReferencesLine, postProcessSupertypes, postProcessClientCode, srbForTypes, srbForMethods, srbForAttributes);
-		//System.out.println(compilationUnit.getLineNumber(1767)-1);
+		BindingsRecoveryAstVisitor visitor = new
+			BindingsRecoveryAstVisitor(compilationUnit, model,
+					sourceFilePath, fileContent, sdPackage,
+					postProcessReferences,
+					postProcessReferencesLine,
+					postProcessSupertypes,
+					postProcessClientCode, srbForTypes,
+					srbForMethods, srbForAttributes);
 		compilationUnit.accept(visitor);
-		//System.out.println(compilationUnit.getLineNumber(1767));
 	}
 
 	private String[] inferSourceFolders(String[] filesArray) {
 		Set<String> sourceFolders = new TreeSet<String>();
 		nextFile: for (String file : filesArray) {
-			for (String sourceFolder : sourceFolders) {
-				if (file.startsWith(sourceFolder)) {
-					continue nextFile;
-				}
-			}
-			String otherSourceFolder = extractSourceFolderFromPath(file);
-			if (otherSourceFolder != null) {
-				sourceFolders.add(otherSourceFolder);
-//				System.out.print("source folder: ");
-//				System.out.println(otherSourceFolder);
-			}
+				  for (String sourceFolder : sourceFolders) {
+					  if (file.startsWith(sourceFolder)) {
+						  continue nextFile;
+					  }
+				  }
+				  String otherSourceFolder = extractSourceFolderFromPath(file);
+				  if (otherSourceFolder != null) {
+					  sourceFolders.add(otherSourceFolder);
+				  }
 		}
 		return sourceFolders.toArray(new String[sourceFolders.size()]);
 	}
@@ -265,11 +255,7 @@ public class SDModelBuilder {
 			String lineFromFile;
 			while ((lineFromFile = scanner.readLine()) != null) {
 				if (lineFromFile.startsWith("package ")) { 
-					// a match!
-					//System.out.print("package declaration: ");
 					String packageName = lineFromFile.substring(8, lineFromFile.indexOf(';'));
-					//System.out.println(packageName);
-					
 					String packagePath = packageName.replace('.', File.separator.charAt(0));
 					int indexOfPackagePath = sourceFilePath.lastIndexOf(packagePath + File.separator);
 					if (indexOfPackagePath >= 0) {
@@ -283,14 +269,13 @@ public class SDModelBuilder {
 		}
 		return null;
 	}
-	
-	/////////////////
-	
-    public SDModel buildModel() {
-        model.initRelationships();
-        RefactoringDetector rbuilder = new RefactoringDetector(config);
-        rbuilder.analyze(model);
-        return model;
-    }
-	
+
+
+	public SDModel buildModel() {
+		model.initRelationships();
+		RefactoringDetector rbuilder = new RefactoringDetector(config);
+		rbuilder.analyze(model);
+		return model;
+	}
+
 }

@@ -1,5 +1,6 @@
 package org.refactoringminer.rm1;
 
+//{{{ import statements
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,20 +29,20 @@ import org.apache.log4j.Logger;
 
 import gr.uom.java.xmi.UMLModel;
 import gr.uom.java.xmi.UMLModelASTReader;
+//}}} import statements
 
 public class GitHistoryRefactoringMinerImpl<T> extends HistoryRefactoringMinerImpl<T> implements HistoryRefactoringMiner<T> {
 
 	private static final Logger log = Logger.getLogger(GitHistoryRefactoringMinerImpl.class);
 	
 	private void detect(RMService<Repository> gitService, Repository repository, final RefactoringHandler<RevCommit> handler, Iterator<RevCommit> i) {
+
 		int commitsCount = 0;
 		int errorCommitsCount = 0;
 		int refactoringsCount = 0;
-
 		File metadataFolder = repository.getDirectory();
 		File projectFolder = metadataFolder.getParentFile();
 		String projectName = projectFolder.getName();
-		
 		long time = System.currentTimeMillis();
 		while (i.hasNext()) {
 			RevCommit currentCommit = i.next();
@@ -54,7 +55,6 @@ public class GitHistoryRefactoringMinerImpl<T> extends HistoryRefactoringMinerIm
 				handler.handleException(currentCommit.getId().getName(),e);
 				errorCommitsCount++;
 			}
-
 			commitsCount++;
 			long time2 = System.currentTimeMillis();
 			if ((time2 - time) > 20000) {
@@ -62,7 +62,6 @@ public class GitHistoryRefactoringMinerImpl<T> extends HistoryRefactoringMinerIm
 				logger.info(String.format("Processing %s [Commits: %d, Errors: %d, Refactorings: %d]", projectName, commitsCount, errorCommitsCount, refactoringsCount));
 			}
 		}
-
 		handler.onFinish(refactoringsCount, commitsCount, errorCommitsCount);
 		logger.info(String.format("Analyzed %s [Commits: %d, Errors: %d, Refactorings: %d]", projectName, commitsCount, errorCommitsCount, refactoringsCount));
 	}
@@ -78,8 +77,8 @@ public class GitHistoryRefactoringMinerImpl<T> extends HistoryRefactoringMinerIm
 		List<String> filesCurrent = new ArrayList<String>();
 		Map<String, String> renamedFilesHint = new HashMap<String, String>();
 		gitService.fileTreeDiff(repository, currentCommit, filesBefore, filesCurrent, renamedFilesHint, true);
-		// If no java files changed, there is no refactoring. Also, if there are
-		// only ADD's or only REMOVE's there is no refactoring
+		/** If no java files changed, there is no refactoring. Also, if there are
+		 only ADD's or only REMOVE's there is no refactoring **/
 		if (!filesBefore.isEmpty() && !filesCurrent.isEmpty() && currentCommit.getParentCount() > 0) {
 			// Checkout and build model for parent commit
 			String parentCommit = currentCommit.getParent(0).getName();

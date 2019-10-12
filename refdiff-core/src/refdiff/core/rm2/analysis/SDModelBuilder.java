@@ -158,9 +158,9 @@ public class SDModelBuilder {
 				String relativePath = sourceFilePath.substring(projectRoot.length() + 1).replaceAll(systemFileSeparator, "/");
 				IProblem[] problems = ast.getProblems();
 				if (problems.length > 0) {
-					log.info(String.format("%s(160) - problems",clazz));
 					problemscount++;
-					if(problemscount > 10000){
+					log.info(String.format("%s(160) - problems#%d",clazz,problemscount));
+					if(problemscount > 1000){
 						throw new RuntimeException("let's skip this to avoid java heap space problems");
 					}
 				}

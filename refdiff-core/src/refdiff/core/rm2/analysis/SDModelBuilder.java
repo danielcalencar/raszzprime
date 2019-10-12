@@ -160,7 +160,7 @@ public class SDModelBuilder {
 				if (problems.length > 0) {
 					problemscount++;
 					log.info(String.format("%s(160) - problems#%d",clazz,problemscount));
-					if(problemscount > 1000){
+					if(problemscount > 2000){
 						throw new RuntimeException("let's skip this to avoid java heap space problems");
 					}
 				}

@@ -16,6 +16,7 @@ import br.ufrn.raszz.model.szz.BugIntroducingCode;
 import br.ufrn.raszz.model.szz.SzzFileRevision;
 import br.ufrn.raszz.persistence.SzzDAO;
 import br.ufrn.razszz.connectoradapter.SzzRepository;
+import org.eclipse.jgit.errors.MissingObjectException;
 
 public abstract class AnnotationGraphService implements Runnable {
 
@@ -63,86 +64,56 @@ public abstract class AnnotationGraphService implements Runnable {
 	}
 
 	private boolean buildAnnotationGraph(List<String> linkedRevs) throws Exception {
-		//did the process start before?
+
 		List<String> processedRevisions = isTest? null: szzDAO.getAllRevisionProcessed(project);
-		
 		log.info("Project " + project + " starting analysis with " + szzType);
 		log.info(linkedRevs.size() + " linked revisions found...");
 		long count = 1;
 		for (String i : linkedRevs) {
-			//specific revisions to ignore here.
-			if(i.equals("dece1ccfeccfe6e331829e88d1d12c991f2a3d21") ||
-					i.equals("806ce6a360c10773207b508409152df0d5d4eb8a")){
-				log.info(String.format("ignoring revision %s as it leads to crazy memory errors",i));
-				continue;
-			}
-
-			if (!isTest) {
-				//in case we needed to stop the process
-				if (processedRevisions.contains(i)) {
-					log.info("Revision " + i + " was processed already!");
-					count++;
+			try {
+				//specific revisions to ignore here.
+				if(i.equals("dece1ccfeccfe6e331829e88d1d12c991f2a3d21") || i.equals("806ce6a360c10773207b508409152df0d5d4eb8a")){
+					log.info(String.format("ignoring revision %s as it leads to crazy memory errors",i));
 					continue;
 				}
-			}
-
-			AnnotationGraphModel model = new AnnotationGraphModel();			
-			
-			bicodes = new ArrayList<BugIntroducingCode>();
-			List<String> paths = repository.getChangedPaths(i);
-			for(String path: paths) {
-			
-				//#debug
-				log.info("path: " + path + "(#" + i + ")");
-				if (debugPath != null && !path.equals(debugPath)) continue;	
-				//#error
-				/*if (path.equals("/db/derby/code/trunk/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("427899")) continue;
-				if (path.equals("/db/derby/code/trunk/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("537850")) continue;
-				if (path.equals("/db/derby/code/trunk/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("590046")) continue;
-				if (path.equals("/db/derby/code/trunk/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("637244")) continue;
-				if (path.equals("/db/derby/code/trunk/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("703170")) continue;
-				if (path.equals("/db/derby/code/trunk/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("123100")) continue;
-				if (path.equals("/db/derby/code/branches/10.8/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("1231214")) continue;
-				if (path.equals("/db/derby/code/branches/10.7/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("1231604")) continue;	
-				if (path.equals("/db/derby/code/branches/10.6/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("1231701")) continue;	
-				if (path.equals("/db/derby/code/branches/10.5/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("1231797")) continue;
-				if (path.equals("/db/derby/code/trunk/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("1341046")) continue;
-				if (path.equals("/db/derby/code/trunk/java/shared/org/apache/derby/shared/common/reference/SQLState.java")
-						&& i.equals("1367150")) continue;*/
-				try {
-					//final LinkedList<SzzFileRevision> szzFileRevisions = extractSZZFilesFromPath(path, entry.getRevision(), false);
-					final LinkedList<SzzFileRevision> szzFileRevisions = repository.extractSZZFilesFromPath(repoUrl, path, i, false);
-					if (szzFileRevisions == null) continue;
-					AnnotationGraphBuilder agb = new AnnotationGraphBuilder();
-					model = agb.buildLinesModel(repository, szzFileRevisions, repoUrl, project);
-					traceBack(model,szzFileRevisions);
-					log.info( "bics: " + bicodes.size()); 
-				} catch (Exception e) {
-					log.error("Error in the path: " + path);
-					continue;
+				if (!isTest) {
+					//in case we needed to stop the process
+					if (processedRevisions.contains(i)) {
+						log.info("Revision " + i + " was processed already!");
+						count++;
+						continue;
+					}
 				}
-			}
-			synchronized(szzDAO){
-				Transaction tx = szzDAO.beginTransaction();
-				for(BugIntroducingCode bicode : bicodes){
-					szzDAO.insertBugIntroducingCode(bicode, szzType);
+				AnnotationGraphModel model = new AnnotationGraphModel();			
+				bicodes = new ArrayList<BugIntroducingCode>();
+				List<String> paths = repository.getChangedPaths(i);
+				for(String path: paths) {
+					log.info("path: " + path + "(#" + i + ")");
+					if (debugPath != null && !path.equals(debugPath)) continue;	
+					try {
+						final LinkedList<SzzFileRevision> szzFileRevisions = repository.extractSZZFilesFromPath(repoUrl, path, i, false);
+						if (szzFileRevisions == null) continue;
+						AnnotationGraphBuilder agb = new AnnotationGraphBuilder();
+						model = agb.buildLinesModel(repository, szzFileRevisions, repoUrl, project);
+						traceBack(model,szzFileRevisions);
+						log.info( "bics: " + bicodes.size()); 
+					} catch (Exception e) {
+						log.error("Error in the path: " + path);
+						continue;
+					}
 				}
-				szzDAO.insertProjectRevisionsProcessed(project, i);
-				tx.commit();
+				synchronized(szzDAO){
+					Transaction tx = szzDAO.beginTransaction();
+					for(BugIntroducingCode bicode : bicodes){
+						szzDAO.insertBugIntroducingCode(bicode, szzType);
+					}
+					szzDAO.insertProjectRevisionsProcessed(project, i);
+					tx.commit();
+				}
+			} catch (MissingObjectException e) {
+				log.error(String.format("skipping revision %s because it is a bad object",i));
 			}
 			log.info(count++ + " processed revisions of " + linkedRevs.size() + " for project " + project);
-			
 		}
 		return true;
 	}		

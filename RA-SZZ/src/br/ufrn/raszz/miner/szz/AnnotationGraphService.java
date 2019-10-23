@@ -72,7 +72,7 @@ public abstract class AnnotationGraphService implements Runnable {
 
 		//List<String> processedRevisions = isTest? null: szzDAO.getAllRevisionProcessed(project);
 		log.info("Project " + project + " starting analysis with " + szzType);
-		log.info(linkedRevs.size() + " linked revisions found...");
+		log.info(String.format("%d linked revisions found...",linkedRevs.size()));
 		long count = 1;
 		for (String i : linkedRevs) {
 			try {
@@ -93,7 +93,7 @@ public abstract class AnnotationGraphService implements Runnable {
 				bicodes = new ArrayList<BugIntroducingCode>();
 				List<String> paths = repository.getChangedPaths(i);
 				for(String path: paths) {
-					log.info("path: " + path + "(#" + i + ")");
+					//log.info("path: " + path + "(#" + i + ")");
 					if (debugPath != null && !path.equals(debugPath)) continue;	
 					try {
 						final LinkedList<SzzFileRevision> szzFileRevisions = repository.extractSZZFilesFromPath(repoUrl, path, i, false);
@@ -122,7 +122,7 @@ public abstract class AnnotationGraphService implements Runnable {
 				log.error(String.format("skipping revision %s because of an index bound error",i));
 				szzDAO.insertProjectRevisionsProcessed(project, i);
 			}
-			log.info(count++ + " processed revisions of " + linkedRevs.size() + " for project " + project);
+			log.info(String.format("thread:%d: %d processed revisions of %d for project %s", threadId, count++, linkedRevs.size(), project));
 		}
 		return true;
 	}		

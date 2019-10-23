@@ -8,16 +8,20 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+
 
 public abstract class AbstractDAO<T> {
 	protected Connection connection;
 	protected Session currentSession;
+	protected StatelessSession currentStatelessSession;
 	protected final Logger log = Logger.getLogger(AbstractDAO.class);
 
 	public AbstractDAO() {
 		currentSession = SingletonSession.getSession("/hibernate.cfg.xml");
+		currentStatelessSession = SingletonSession.getStatelessSession("/hibernate.cfg.xml");
 	}
 
 	public void connect() {
@@ -69,16 +73,12 @@ public abstract class AbstractDAO<T> {
 
 	public void executeSQLWithParams(String sql, Object... values){
 		SQLQuery query = currentSession.createSQLQuery(sql);
-
 		int count = 1;
 		for(Object value : values){
 			String paramName = "param"+count;
 			query.setParameter(paramName,value);
 			count++;
 		}
-		
-		//query.
-
 		query.executeUpdate();
 	}
 
@@ -109,6 +109,15 @@ public abstract class AbstractDAO<T> {
 	public void commit(Transaction transaction) {
 		transaction.commit();
 		currentSession.clear();
+	}
+
+	public Transaction beginTransactionSless() {
+		Transaction tx = currentStatelessSession.beginTransaction();
+		return tx;
+	}
+
+	public void commitSless(Transaction transaction) {
+		transaction.commit();
 	}
 
 	public void disconnect() {

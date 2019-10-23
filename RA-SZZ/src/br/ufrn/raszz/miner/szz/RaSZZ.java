@@ -215,23 +215,44 @@ public class RaSZZ extends Miner {
 			String debugPath = (String) this.getParameters().get("debugPath");
 			String debugContent = (String) this.getParameters().get("debugContent");	
 			boolean isTest = (Boolean) this.getParameters().get("isTest");	
-			
+			int threads = Integer.valueOf(this.getProperty("threads","/backhoe.properties"));
 			//for (int j = 0; j < projects.length; j++) {			
 			List<String> linkedRevs = configureInputRevisions(project);				
+			List<String> processedRevisions = szzDAO.getAllRevisionProcessed(project);
+			//now partitioning according to the number of threads
+			int size = linkedRevs.size();
+			int partition = size/threads;  
+			List<List<String>> partitionedRevs = new ArrayList<List<String>>();
+			int checkPoint = 0;
 			SZZImplementationType szzType = (SZZImplementationType) this.getParameters().get("szzType");		
-			AnnotationGraphService worker = null;
-			switch (szzType) {
-				case RASZZ:
-					RefacToolType refacTool = RefacToolType.BOTH;
-					worker = new TraceBackRaSZZ(repository, szzDAO, project, 
-							linkedRevs, repoUrl, debugPath, debugContent, szzType, refacTool, isTest);
-					break;
-				case MASZZ:
-					worker = new TraceBackMaSZZ(repository, szzDAO, project, 
-							linkedRevs, repoUrl, debugPath, debugContent, szzType, isTest);
-					break;									
+			List<String> partitionRev = new ArrayList<String>();
+			for(int i = 0; i < threads; i++){
+				if((i+1)!=threads){
+					partitionRev.addAll(linkedRevs.subList(checkPoint,checkPoint + partition));
+					checkPoint = checkPoint + partition;
+				} else {
+					partitionRev.addAll(linkedRevs.subList(checkPoint,linkedRevs.size()));
+				}
+				partitionedRevs.add(partitionRev);
 			}
-			worker.run();
+			for(int i = 0; i < threads; i++){
+				AnnotationGraphService worker = null;
+				if((i+1)!=threads){
+					switch (szzType) {
+						case RASZZ:
+							RefacToolType refacTool = RefacToolType.BOTH;
+							worker = new TraceBackRaSZZ(repository, szzDAO, project, 
+									partitionedRevs.get(i), repoUrl, debugPath, debugContent, szzType, refacTool, isTest,
+									processedRevisions, i);
+							break;
+						//case MASZZ:
+						//	worker = new TraceBackMaSZZ(repository, szzDAO, project, 
+						//			partitionedRevs.get(i), repoUrl, debugPath, debugContent, szzType, isTest);
+						//	break;									
+					}
+				}
+				worker.run();
+			}
 			//}
 		} catch ( Exception e ) {
 			e.printStackTrace();

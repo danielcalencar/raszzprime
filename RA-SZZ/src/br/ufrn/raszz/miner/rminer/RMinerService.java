@@ -101,17 +101,18 @@ public class RMinerService<T> {
 			for (Refactoring refactoring : refactorings) {
 				RefactoringDataBuilder refacDataBuilder = new RefactoringDataBuilder();
 				List<RefElement> elements = refacDataBuilder.prepareElement(refactoring, project, commitId);
+
+				Transaction tx = refacDAO.beginTransaction();
 				for (RefElement element : elements) {
 					refacDAO.saveRefacResults(element, revisionType);
 				}
+				if(!tx.wasCommitted()) tx.commit();
 				refElements.addAll(elements);
 
 			}
 			if (refactorings != null)
 				System.err.println("============ (" + refactorings.size()
 						+ " RMINER refactoring data saved with success for commitId: " + commitId + ") ===========");
-			Transaction tx = refacDAO.beginTransaction();
-			tx.commit();
 			return refElements;
 		}
 	}

@@ -31,10 +31,13 @@ public abstract class AnnotationGraphService implements Runnable {
 	protected String debugContent;
 	protected SZZImplementationType szzType;
 	protected boolean isTest;
+	protected List<String> processedRevisions = new ArrayList<String>();
+	protected int threadId;
 
 	public AnnotationGraphService(SzzRepository repository, SzzDAO szzDao,
 			String project, List<String> linkedRevs, String repoUrl, 
-			String debugPath, String debugContent, SZZImplementationType szzType, boolean isTest) {
+			String debugPath, String debugContent, SZZImplementationType szzType, boolean isTest,
+			List<String> processedRevisions, int threadId) {
 		this.repository = repository;
 		this.setDao(szzDao);
 		this.project = project;
@@ -44,6 +47,8 @@ public abstract class AnnotationGraphService implements Runnable {
 		this.debugContent = debugContent;
 		this.szzType = szzType;
 		this.isTest = isTest;
+		this.processedRevisions = processedRevisions;
+		this.threadId = threadId;
 	}
 
 	private static void setDao(SzzDAO dao){
@@ -65,7 +70,7 @@ public abstract class AnnotationGraphService implements Runnable {
 
 	private boolean buildAnnotationGraph(List<String> linkedRevs) throws Exception {
 
-		List<String> processedRevisions = isTest? null: szzDAO.getAllRevisionProcessed(project);
+		//List<String> processedRevisions = isTest? null: szzDAO.getAllRevisionProcessed(project);
 		log.info("Project " + project + " starting analysis with " + szzType);
 		log.info(linkedRevs.size() + " linked revisions found...");
 		long count = 1;
@@ -112,6 +117,10 @@ public abstract class AnnotationGraphService implements Runnable {
 				}
 			} catch (MissingObjectException e) {
 				log.error(String.format("skipping revision %s because it is a bad object",i));
+				szzDAO.insertProjectRevisionsProcessed(project, i);
+			} catch (ArrayIndexOutOfBoundsException aie) {
+				log.error(String.format("skipping revision %s because of an index bound error",i));
+				szzDAO.insertProjectRevisionsProcessed(project, i);
 			}
 			log.info(count++ + " processed revisions of " + linkedRevs.size() + " for project " + project);
 		}

@@ -26,8 +26,10 @@ import br.ufrn.razszz.connectoradapter.SzzRepository;
 public class TraceBackMaSZZ extends AnnotationGraphService {
 			
 	public TraceBackMaSZZ(SzzRepository repository, SzzDAO szzDao, String project, List<String> linkedRevs,
-			String repoUrl, String debugPath, String debugContent, SZZImplementationType szzType, boolean isTest) {
-		super(repository, szzDao, project, linkedRevs, repoUrl, debugPath, debugContent ,szzType, isTest);
+			String repoUrl, String debugPath, String debugContent, SZZImplementationType szzType, boolean isTest,
+			List<String> processedRevisions, int threadId) {
+		super(repository, szzDao, project, linkedRevs, repoUrl, debugPath, debugContent ,szzType, isTest,
+				processedRevisions, threadId);
 	}
 
 	@Override

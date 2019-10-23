@@ -7,6 +7,8 @@ import org.hibernate.SQLQuery;
 import br.ufrn.raszz.model.RefCaller;
 import br.ufrn.raszz.model.RefElement;
 import br.ufrn.raszz.model.RefacToolType;
+import org.hibernate.exception.DataException;
+import org.hibernate.Transaction;
 
 public class RefacDAOImpl extends RefacDAO {
 
@@ -22,6 +24,7 @@ public class RefacDAOImpl extends RefacDAO {
 				+ ":param7,:param8, :param9, :param10, :param11, :param12, "
 				+ ":param13, :param14, :param15, :param16,:param17, :param18, :param19,"
 				+ ":param20,:param21, :param22, :param23, :param24)";
+		try {
 		executeSQLWithParams(sql, ref.getRevision(), ref.getProject(), ref.getSummary(), ref.getRefactoringtype(),
 				ref.getEntityafter(), ref.getEntitybefore(), ref.getElementtype(), ref.getCallers(),
 				ref.getAfterstartline(), ref.getAfterendline(), ref.getAfterpathfile(), ref.getBeforestartline(),
@@ -29,6 +32,12 @@ public class RefacDAOImpl extends RefacDAO {
 				ref.getAftersimplename(), ref.getContent(), ref.getAfternestingLevel(), revisionType,
 				ref.getBeforestarscope(), ref.getBeforesimpleName(), ref.getBeforecontent(),
 				ref.getBeforenestingLevel(), ref.getTool().toString());
+		} catch (DataException datae){
+			log.error("Ignoring weird error (e.g., malformed characters)");
+			Transaction tx = currentSession.getTransaction();
+			tx.commit();
+			currentSession.clear();
+		}
 	}
 
 	@Override

@@ -38,8 +38,8 @@ public class TraceBackRaSZZ extends AnnotationGraphService {
 			
 	public TraceBackRaSZZ(SzzRepository repository, SzzDAO szzDao, String project, List<String> linkedRevs,
 			String repoUrl, String debugPath, String debugContent, SZZImplementationType szzType, 
-			RefacToolType refacTool, boolean isTest) {
-		super(repository, szzDao, project, linkedRevs, repoUrl, debugPath, debugContent, szzType, isTest);
+			RefacToolType refacTool, boolean isTest, List<String> processedRevisions, int threadId) {
+		super(repository, szzDao, project, linkedRevs, repoUrl, debugPath, debugContent, szzType, isTest, processedRevisions, threadId);
 		this.refacTool = refacTool;
 		this.refacRevProcSet = new HashMap<>();
 		this.refacSet = new ArrayList<RefElement>();

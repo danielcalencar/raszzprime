@@ -191,26 +191,23 @@ public class SzzDAOImpl extends SzzDAO {
 	
 	@Override
 	public synchronized boolean hasRefacFix(String path, String fixrevision, int linenumber, int adjustmentindex, String content) {
-		String sql = "SELECT count(distinct ref.*)" +
+		String sql = "SELECT count(distinct ref.linenumber, " + "
+			"ref.adjustmentindex, " + 
+			"ref.beforestartline, " + 
+			"ref.beforeendline, " + 
+			"ref.beforestartscope " + "
+			",ref.beforenestinglevel)" +
 						"FROM refdiffresult ref " +
 						"WHERE (:fixrevision = ref.revision " + 
-							//"AND ref.elementtype <> 'Type' " + //comentar!
-							//"AND ref.tool = 'refdiff' " +		//por enquanto só refdiff
 							"AND :path = ref.beforepathfile " +
-							//"AND ref.revisiontype like 'fix%' " + 
 						      ") " +
 							"AND " +
 						      "( " +
-							//" ref.beforecontent like concat('%',trim(substring(:content from 2)),'%') OR " + //comentar
-							
-							//extract operation só é verificado no caller, pq aqui o intervalo de antes da mudança é impreciso, pois pode vim de diferente arquivos
-							//"(refactoringtype IN ('EXTRACT_OPERATION') AND (:linenumber + :adjustmentindex) >= REF.beforestartline AND :linenumber <= REF.beforeendline) OR " + 
 							"(refactoringtype IN ('EXTRACT_INTERFACE') AND :content like concat('%class%',REF.beforesimplename,'%')) OR " +
 							"(refactoringtype IN ('EXTRACT_SUPERCLASS') AND :content like concat('%class%',REF.beforesimplename,'%')) OR " +
-							//"(refactoringtype IN ('INLINE_OPERATION') AND (:linenumber + :adjustmentindex) >= REF.beforestartline AND :linenumber <= REF.beforeendline) OR " +
 							"(refactoringtype IN ('MOVE_ATTRIBUTE') AND (:linenumber + :adjustmentindex) >= REF.beforestartline AND :linenumber <= REF.beforeendline) OR " +	
 							"(refactoringtype IN ('MOVE_OPERATION') AND (:linenumber + :adjustmentindex) >= REF.beforestartline AND :linenumber <= REF.beforeendline) OR " +	
-							"(refactoringtype IN ('MOVE_CLASS') AND (:linenumber + :adjustmentindex) >= REF.beforestartline AND :linenumber <= REF.beforeendline) OR " + //AND (:content like concat('%class%',REF.beforesimplename,'%') OR :content like concat('%interface%',REF.beforesimplename,'%') OR :content like concat('%enum%',REF.beforesimplename,'%')) 
+							"(refactoringtype IN ('MOVE_CLASS') AND (:linenumber + :adjustmentindex) >= REF.beforestartline AND :linenumber <= REF.beforeendline) OR " +
 							"(refactoringtype IN ('PULL_UP_ATTRIBUTE') AND (:linenumber + :adjustmentindex) >= REF.beforestartline AND :linenumber <= REF.beforeendline) OR " +
 							//"(refactoringtype IN ('PULL_UP_OPERATION') AND (:linenumber + :adjustmentindex) >= REF.beforestartline AND :linenumber <= REF.beforeendline) OR " +
 							"(refactoringtype IN ('PUSH_DOWN_ATTRIBUTE') AND (:linenumber + :adjustmentindex) >= REF.beforestartline AND :linenumber <= REF.beforeendline) OR " +
@@ -245,70 +242,10 @@ public class SzzDAOImpl extends SzzDAO {
 		query.setParameter("content", content);
 		List<BigInteger> countref = query.list();
 		if (countref.get(0).intValue() == 0 && countref.get(1).intValue() == 0 )
-		//List<Object> countref = query.list();
-		//if (countref.get(0).toString().equals(0) && countref.get(1).toString().equals(0)) 
 			return false;
 		else
 			return true;
 	}
-	
-	/*@Override
-	public synchronized boolean hasRefacBic(String path, String revision, int linenumber, int adjustmentindex, String content) {
-		String sql = "SELECT count(ref.*) " +
-						"FROM refdiffresult ref " +
-						"WHERE (:revision = ref.revision " + 
-							//"AND ref.elementtype <> 'Type' " +
-							"AND :path = ref.afterpathfile " +
-							"AND ref.revisiontype like 'bic%' " + 
-							"AND :revision = ref.revision " +
-						      ") " +
-							"AND " +
-						      "( " +
-							//"ref.aftercontent like concat('%',trim(substring(:content from 2)),'%') OR " +
-							"(refactoringtype IN ('EXTRACT_OPERATION') AND (:linenumber + :adjustmentindex) >= REF.afterstartline AND :linenumber <= REF.afterendline) OR " +
-							"(refactoringtype IN ('EXTRACT_INTERFACE') AND :content like concat('%class%',REF.aftersimplename,'%')) OR " +
-							"(refactoringtype IN ('EXTRACT_SUPERCLASS') AND :content like concat('%class%',REF.aftersimplename,'%')) OR " +
-							"(refactoringtype IN ('INLINE_OPERATION') AND (:linenumber + :adjustmentindex) >= REF.afterstartline AND :linenumber <= REF.afterendline) OR " +
-							"(refactoringtype IN ('MOVE_ATTRIBUTE') AND (:linenumber + :adjustmentindex) >= REF.afterstartline AND :linenumber <= REF.afterendline) OR " +	
-							"(refactoringtype IN ('MOVE_OPERATION') AND (:linenumber + :adjustmentindex) >= REF.afterstartline AND :linenumber <= REF.afterendline) OR " +	
-							"(refactoringtype IN ('MOVE_CLASS') AND (:content like concat('%class%',REF.aftersimplename,'%') OR :content like concat('%interface%',REF.aftersimplename,'%') OR :content like concat('%enum%',REF.aftersimplename,'%'))) OR " +
-							"(refactoringtype IN ('PULL_UP_ATTRIBUTE') AND (:linenumber + :adjustmentindex) >= REF.afterstartline AND :linenumber <= REF.afterendline) OR " +
-							"(refactoringtype IN ('PULL_UP_OPERATION') AND (:linenumber + :adjustmentindex) >= REF.afterstartline AND :linenumber <= REF.afterendline) OR " +
-							"(refactoringtype IN ('PUSH_DOWN_ATTRIBUTE') AND (:linenumber + :adjustmentindex) >= REF.afterstartline AND :linenumber <= REF.afterendline) OR " +
-							"(refactoringtype IN ('PUSH_DOWN_OPERATION') AND (:linenumber + :adjustmentindex) >= REF.afterstartline AND :linenumber <= REF.afterendline) OR " +
-							"(refactoringtype IN ('RENAME_METHOD') AND :linenumber >= REF.afterstartline AND :linenumber < REF.afterstartscope) OR " +
-							"(refactoringtype IN ('RENAME_CLASS') AND (:linenumber >= afterstartline " + 
-								"AND (:linenumber <= REF.afterstartscope OR (:linenumber = REF.afterstartscope+1 AND (:content like '%class%' or :content like '%interface%' or :content like '%enum%'))) " +
-								")) OR " +
-							"(refactoringtype IN ('MOVE_RENAME_CLASS') AND (REF.afternestinglevel = 0 AND :linenumber >= 1 " + 
-								"AND (:linenumber <= REF.afterstartscope OR (:linenumber = REF.afterstartscope+1 AND (:content like '%class%' or :content like '%interface%' or :content like '%enum%'))) " +
-								")) OR " +
-							"(refactoringtype IN ('MOVE_RENAME_CLASS') AND (REF.afternestinglevel >= 0 AND :linenumber >=afterstartline and (:linenumber <= REF.afterstartscope OR (:linenumber = REF.afterstartscope+1 AND (:content like '%class%' or :content like '%interface%' or :content like '%enum%'))) " +
-								")) OR " +
-							"(refactoringtype IN ('MOVE_RENAME_CLASS', 'RENAME_CLASS') AND (:content like concat('%class%',REF.aftersimplename,'%') OR :content like concat('%interface%',REF.aftersimplename,'%') OR :content like concat('%enum%',REF.aftersimplename,'%')) " + 
-								") " +
-							   " ) UNION ALL "+
-							   "SELECT count(ref.*) " + 
-							   "FROM callerrefdiff ref " + 
-							   "WHERE (:revision = ref.revision " + 
-							   	"AND REF.type = 'after' " +
-							   	"AND revisiontype like 'bic%' " +
-							   	"AND :path = REF.callerpath " +
-							   	"AND :linenumber = REF.callerline)";
-		SQLQuery query = currentSession.createSQLQuery(sql);
-		query.setParameter("path", path);
-		query.setParameter("revision", revision);
-		query.setParameter("linenumber", linenumber);
-		query.setParameter("adjustmentindex", adjustmentindex);  
-		query.setParameter("content", content);
-		//List<Object> countref = query.list();
-		List<BigInteger> countref = query.list();
-		if (countref.get(0).intValue() == 0 && countref.get(1).intValue() == 0 )
-		//if (countref.get(0).toString().equals(0) && countref.get(1).toString().equals(0)) 
-			return false;
-		else
-			return true;
-	}*/
 		
 	@Override
 	public synchronized List<RefElement> getRefacBicByRevision(String revision, String project) {

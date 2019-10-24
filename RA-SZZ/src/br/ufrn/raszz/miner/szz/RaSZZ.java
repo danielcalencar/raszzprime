@@ -237,21 +237,21 @@ public class RaSZZ extends Miner {
 			}
 			for(int i = 0; i < threads; i++){
 				AnnotationGraphService worker = null;
-				if((i+1)!=threads){
-					switch (szzType) {
-						case RASZZ:
-							RefacToolType refacTool = RefacToolType.BOTH;
-							worker = new TraceBackRaSZZ(repository, szzDAO, project, 
-									partitionedRevs.get(i), repoUrl, debugPath, debugContent, szzType, refacTool, isTest,
-									processedRevisions, i);
-							break;
-						//case MASZZ:
+				switch (szzType) {
+					case RASZZ:
+						RefacToolType refacTool = RefacToolType.BOTH;
+						worker = new TraceBackRaSZZ(repository, szzDAO, project, 
+								partitionedRevs.get(i), repoUrl, debugPath, debugContent, szzType, refacTool, isTest,
+								processedRevisions, i);
+						break;
+					case MASZZ:
 						//	worker = new TraceBackMaSZZ(repository, szzDAO, project, 
 						//			partitionedRevs.get(i), repoUrl, debugPath, debugContent, szzType, isTest);
 						//	break;									
-					}
+						log.info("MA-SZZ not supportted right now");
 				}
-				worker.run();
+				Thread t = new Thread(worker);
+				t.start();
 			}
 			//}
 		} catch ( Exception e ) {

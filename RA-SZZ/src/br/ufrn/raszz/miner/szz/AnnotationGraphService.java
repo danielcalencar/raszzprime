@@ -84,7 +84,7 @@ public abstract class AnnotationGraphService implements Runnable {
 				if (!isTest) {
 					//in case we needed to stop the process
 					if (processedRevisions.contains(i)) {
-						log.info("Revision " + i + " was processed already!");
+						log.info(String.format("revindex:%d: Revision %s was processed already!",count,i));
 						count++;
 						continue;
 					}

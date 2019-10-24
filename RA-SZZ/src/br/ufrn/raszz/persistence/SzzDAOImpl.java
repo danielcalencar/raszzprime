@@ -191,12 +191,12 @@ public class SzzDAOImpl extends SzzDAO {
 	
 	@Override
 	public synchronized boolean hasRefacFix(String path, String fixrevision, int linenumber, int adjustmentindex, String content) {
-		String sql = "SELECT count(distinct ref.linenumber, " + "
+		String sql = "SELECT count(distinct ref.linenumber, " + 
 			"ref.adjustmentindex, " + 
 			"ref.beforestartline, " + 
 			"ref.beforeendline, " + 
-			"ref.beforestartscope " + "
-			",ref.beforenestinglevel)" +
+			"ref.beforestartscope, " + 
+			"ref.beforenestinglevel) " +
 						"FROM refdiffresult ref " +
 						"WHERE (:fixrevision = ref.revision " + 
 							"AND :path = ref.beforepathfile " +

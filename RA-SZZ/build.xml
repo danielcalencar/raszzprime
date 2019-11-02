@@ -41,7 +41,8 @@
 	    <javac verbose="false" debug="true" 
 		    srcdir="${src.dir}" destdir="${classes.dir}" 
 		    classpathref="classpath"
-		    includes="**/*.java"/>
+		    includes="**/*.java"
+		encoding="Windows-1252"/>
 	    <copy todir="${classes.dir}">
 		    <fileset dir="${src.dir}" excludes="**/*.java"/>
 	    </copy>

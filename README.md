@@ -25,7 +25,7 @@ RA-SZZ is composed of five modules (or subprojects), which are listed below:
 ## Building RA-SZZ
 
 Currently, RA-SZZ uses Apache Ant as the building tool for its core components.
-In order to run RA-SZZ, the components should be build in the following order (assuming you are
+In order to run RA-SZZ, the components should be built in the following order (assuming you are
 at the raszzprime/ directory).
 
 ```
